@@ -12,6 +12,7 @@ const answersEl = document.getElementById("answers");
 const feedbackEl = document.getElementById("feedback");
 const scoreEl = document.getElementById("score");
 const nextBtn = document.getElementById("nextBtn");
+const submitBtn = document.getElementById("submitBtn");
 const restartBtn = document.getElementById("restartBtn");
 const progressBar = document.getElementById("progress-bar");
 const progressText = document.getElementById("progress-text");
@@ -35,15 +36,18 @@ function startQuiz(level) {
 
 function loadQuestion() {
   clearInterval(timer);
-  timerEl.textContent = `⏱ ${timeLeft}s`;
   feedbackEl.textContent = "";
   answersEl.innerHTML = "";
+  nextBtn.disabled = true;
 
   const q = filteredQuestions[currentQuestion];
   questionEl.textContent = q.question;
 
-  progressText.textContent = `Question ${currentQuestion + 1} of ${filteredQuestions.length}`;
-  progressBar.style.width = `${((currentQuestion + 1) / filteredQuestions.length) * 100}%`;
+  progressText.textContent =
+    `Question ${currentQuestion + 1} of ${filteredQuestions.length}`;
+
+  progressBar.style.width =
+    `${((currentQuestion + 1) / filteredQuestions.length) * 100}%`;
 
   q.options.forEach((option, index) => {
     const btn = document.createElement("button");
@@ -52,18 +56,31 @@ function loadQuestion() {
     answersEl.appendChild(btn);
   });
 
+  // Button logic
+  if (currentQuestion === filteredQuestions.length - 1) {
+    nextBtn.style.display = "none";
+    submitBtn.style.display = "inline-block";
+  } else {
+    nextBtn.style.display = "inline-block";
+    submitBtn.style.display = "none";
+  }
+
   startTimer();
 }
 
 function startTimer() {
   let count = timeLeft;
+  timerEl.textContent = `⏱ ${count}s`;
+
   timer = setInterval(() => {
     count--;
     timerEl.textContent = `⏱ ${count}s`;
+
     if (count === 0) {
       clearInterval(timer);
       feedbackEl.textContent = "⏰ Time Up!";
       disableButtons();
+      nextBtn.disabled = false;
     }
   }, 1000);
 }
@@ -80,19 +97,22 @@ function checkAnswer(selected) {
 
   if (selected === correct) score++;
   scoreEl.textContent = `Score: ${score}`;
+
+  nextBtn.disabled = false;
 }
 
 function disableButtons() {
-  document.querySelectorAll(".answers button").forEach(btn => btn.disabled = true);
+  document.querySelectorAll(".answers button")
+    .forEach(btn => btn.disabled = true);
 }
 
 nextBtn.onclick = () => {
   currentQuestion++;
-  if (currentQuestion < filteredQuestions.length) {
-    loadQuestion();
-  } else {
-    showResult();
-  }
+  loadQuestion();
+};
+
+submitBtn.onclick = () => {
+  showResult();
 };
 
 function showResult() {
@@ -100,7 +120,9 @@ function showResult() {
   answersEl.innerHTML = "";
 
   const highScore = localStorage.getItem("highScore") || 0;
-  if (score > highScore) localStorage.setItem("highScore", score);
+  if (score > highScore) {
+    localStorage.setItem("highScore", score);
+  }
 
   feedbackEl.innerHTML = `
     Final Score: ${score}/${filteredQuestions.length}<br>
@@ -108,6 +130,7 @@ function showResult() {
   `;
 
   nextBtn.style.display = "none";
+  submitBtn.style.display = "none";
   restartBtn.style.display = "block";
 }
 

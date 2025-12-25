@@ -1,7 +1,12 @@
 const questions = [
   {
     question: "HTML stands for?",
-    options: ["Hyper Text Markup Language", "High Text ML", "Hyper Tool ML", "None"],
+    options: [
+      "Hyper Text Markup Language",
+      "High Text ML",
+      "Hyper Tool ML",
+      "None"
+    ],
     answer: 0,
     difficulty: "easy"
   },
@@ -19,13 +24,23 @@ const questions = [
   },
   {
     question: "What does DOM stand for?",
-    options: ["Document Object Model", "Data Object Model", "Digital Object Method", "None"],
+    options: [
+      "Document Object Model",
+      "Data Object Model",
+      "Digital Object Method",
+      "None"
+    ],
     answer: 0,
     difficulty: "medium"
   },
   {
     question: "Which method converts JSON to object?",
-    options: ["JSON.parse()", "JSON.stringify()", "JSON.convert()", "parse.JSON()"],
+    options: [
+      "JSON.parse()",
+      "JSON.stringify()",
+      "JSON.convert()",
+      "parse.JSON()"
+    ],
     answer: 0,
     difficulty: "hard"
   },

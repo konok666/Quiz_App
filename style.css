@@ -157,7 +157,7 @@ body {
 /* ===============================
    Buttons
 ================================ */
-#nextBtn,
+#nextBtn, #submitBtn,
 .restart {
   padding: 10px 16px;
   border: none;
@@ -166,12 +166,12 @@ body {
   font-weight: 600;
 }
 
-#nextBtn {
+#nextBtn, #submitBtn {
   background: #667eea;
   color: white;
 }
 
-#nextBtn:hover {
+#nextBtn:hover, #submitBtn:hover {
   background: #5a67d8;
 }
 
