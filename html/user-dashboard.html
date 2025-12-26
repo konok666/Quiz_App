@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <div class="user-container">
+    <h2>Welcome, <span id="userName"></span> 👋</h2>
+
+    <p>Ready to test your knowledge? Start a quiz below.</p>
+
+    <button id="startQuizBtn">Start Quiz</button>
+    <button id="logoutBtn" class="danger">Logout</button>
+  </div>
+
+  <!-- JS files -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/user.js"></script>
+
+  <!-- AUTH CHECK (DO NOT REMOVE) -->
+  <script>
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!user || localStorage.getItem("role") !== "user") {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("userName").innerText = user.name;
+    }
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("role");
+      window.location.href = "login.html";
+    });
+  </script>
+
+</body>
+</html>

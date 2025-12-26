@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Registration | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <div class="register-container">
+    <h2>Create Account</h2>
+
+    <form id="registerForm">
+      <input
+        type="text"
+        id="name"
+        placeholder="Full Name"
+        required
+      />
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Email Address"
+        required
+      />
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+      />
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="text">
+      Already have an account?
+      <a href="login.html">Login</a>
+    </p>
+
+    <p id="error" class="error"></p>
+    <p id="success" class="success"></p>
+  </div>
+
+  <!-- JS files -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

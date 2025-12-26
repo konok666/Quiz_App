@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>Admin Login</h2>
+
+    <form id="adminLoginForm">
+      <input
+        type="email"
+        id="adminEmail"
+        placeholder="Enter Admin Email"
+        required
+      />
+
+      <input
+        type="password"
+        id="adminPassword"
+        placeholder="Enter Password"
+        required
+      />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="text">
+      Back to <a href="login.html">User Login</a>
+    </p>
+
+    <p id="error" class="error"></p>
+  </div>
+
+  <!-- JS files -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

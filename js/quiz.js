@@ -1,0 +1,150 @@
+/* ==============================
+   QUIZ LOGIC
+================================ */
+
+let questionsList = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let timer;
+let timeLeft = 10;
+
+// ---------- ROLE PROTECTION ----------
+(function checkUserRole() {
+  const role = localStorage.getItem("role");
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (role !== "user" || !user) {
+    window.location.href = "login.html";
+  }
+})();
+
+// ---------- ELEMENTS ----------
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const feedbackEl = document.getElementById("feedback");
+const timerEl = document.getElementById("timer");
+const progressBar = document.getElementById("progress-bar");
+const progressText = document.getElementById("progress-text");
+const scoreEl = document.getElementById("score");
+const nextBtn = document.getElementById("nextBtn");
+const submitBtn = document.getElementById("submitBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// ---------- LOGOUT ----------
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function () {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("role");
+    window.location.href = "login.html";
+  });
+}
+
+// ---------- INIT QUIZ ----------
+function initQuiz() {
+  questionsList = getQuestions();
+  questionsList.sort(() => Math.random() - 0.5); // random order
+  questionsList = questionsList.slice(0, 10); // Limit to 10 questions
+
+  currentQuestionIndex = 0;
+  score = 0;
+  scoreEl.innerText = `Score: ${score}`;
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  clearInterval(timer);
+  feedbackEl.innerText = "";
+  answersEl.innerHTML = "";
+
+  const q = questionsList[currentQuestionIndex];
+  questionEl.innerText = q.question;
+
+  // Show progress
+  progressText.innerText = `Question ${currentQuestionIndex + 1} of ${questionsList.length}`;
+  progressBar.style.width = `${((currentQuestionIndex + 1) / questionsList.length) * 100}%`;
+
+  // Render options
+  q.options.forEach((option, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = option;
+    btn.onclick = () => checkAnswer(index);
+    answersEl.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+// ---------- TIMER ----------
+function startTimer() {
+  const q = questionsList[currentQuestionIndex];
+  timeLeft = q.difficulty === "easy" ? 15 : q.difficulty === "medium" ? 10 : 7;
+
+  let count = timeLeft;
+  timerEl.innerText = `⏱ ${count}s`;
+
+  timer = setInterval(() => {
+    count--;
+    timerEl.innerText = `⏱ ${count}s`;
+    if (count <= 0) {
+      clearInterval(timer);
+      feedbackEl.innerText = "⏰ Time's up!";
+      disableButtons();
+    }
+  }, 1000);
+}
+
+// ---------- CHECK ANSWER ----------
+function checkAnswer(selectedIndex) {
+  clearInterval(timer);
+
+  const q = questionsList[currentQuestionIndex];
+
+  const buttons = document.querySelectorAll(".answers button");
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add("correct");
+    if (i === selectedIndex && selectedIndex !== q.answer) btn.classList.add("wrong");
+  });
+
+  if (selectedIndex === q.answer) score++;
+  scoreEl.innerText = `Score: ${score}`;
+}
+
+// ---------- DISABLE OPTIONS ----------
+function disableButtons() {
+  document.querySelectorAll(".answers button").forEach(btn => btn.disabled = true);
+}
+
+// ---------- NEXT BUTTON ----------
+if (nextBtn) {
+  nextBtn.addEventListener("click", function () {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questionsList.length) {
+      loadQuestion();
+    } else {
+      showSubmitButton();
+    }
+  });
+}
+
+// ---------- SHOW SUBMIT BUTTON ----------
+function showSubmitButton() {
+  nextBtn.style.display = "none";
+  submitBtn.style.display = "inline-block";
+}
+
+// ---------- SUBMIT QUIZ ----------
+if (submitBtn) {
+  submitBtn.addEventListener("click", function () {
+    questionEl.innerText = "🎉 Quiz Completed!";
+    answersEl.innerHTML = "";
+    feedbackEl.innerHTML = `Final Score: ${score}/${questionsList.length}`;
+
+    submitBtn.style.display = "none";
+    nextBtn.style.display = "none";
+  });
+}
+
+// ---------- START QUIZ ON PAGE LOAD ----------
+window.onload = initQuiz;

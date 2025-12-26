@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Login | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>User Login</h2>
+
+    <form id="loginForm">
+      <input
+        type="email"
+        id="email"
+        placeholder="Enter Email"
+        required
+      />
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter Password"
+        required
+      />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="text">
+      Don’t have an account?
+      <a href="register.html">Register</a>
+    </p>
+
+    <p class="text admin-link">
+      Are you an admin?
+      <a href="admin-login.html">Admin Login</a>
+    </p>
+
+    <p id="error" class="error"></p>
+  </div>
+
+  <!-- JS files -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

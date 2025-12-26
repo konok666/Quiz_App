@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Common CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+
+  <div class="quiz-container">
+    <h2 id="question">Question text</h2>
+
+    <div id="answers" class="answers">
+      <!-- Options will be generated here dynamically -->
+    </div>
+
+    <p id="feedback"></p>
+
+    <p id="timer">⏱ 10s</p>
+    <div class="progress">
+      <div id="progress-bar" style="height: 10px; background: #667eea; width: 0;"></div>
+    </div>
+    <p id="progress-text"></p>
+
+    <div class="quiz-footer">
+      <span id="score">Score: 0</span>
+      <button id="nextBtn">Next</button>
+      <button id="submitBtn" style="display:none;">Submit Quiz</button>
+    </div>
+
+    <button id="logoutBtn" class="danger">Logout</button>
+  </div>
+
+  <!-- JS files -->
+  <script src="../js/storage.js"></script>
+  <script src="../js/quiz.js"></script>
+</body>
+</html>
