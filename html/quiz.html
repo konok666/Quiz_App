@@ -12,31 +12,43 @@
 <body>
 
   <div class="quiz-container">
-    <h2 id="question">Question text</h2>
 
-    <div id="answers" class="answers">
-      <!-- Options will be generated here dynamically -->
+    <!-- TOP BAR -->
+    <div class="quiz-top">
+      <button id="backBtn" class="back-btn">⬅ Back</button>
+      <span id="timer">⏱ 10s</span>
     </div>
 
+    <!-- QUESTION -->
+    <div class="question-box">
+      <span id="questionSerial">1.</span>
+      <span id="question">Question text</span>
+    </div>
+
+    <!-- ANSWERS -->
+    <div id="answers" class="answers"></div>
+
+    <!-- FEEDBACK -->
     <p id="feedback"></p>
 
-    <p id="timer">⏱ 10s</p>
+    <!-- PROGRESS -->
     <div class="progress">
-      <div id="progress-bar" style="height: 10px; background: #667eea; width: 0;"></div>
+      <div id="progress-bar"></div>
     </div>
     <p id="progress-text"></p>
 
+    <!-- FOOTER -->
     <div class="quiz-footer">
       <span id="score">Score: 0</span>
-      <button id="nextBtn">Next</button>
+      <button id="nextBtn" disabled>Next</button>
       <button id="submitBtn" style="display:none;">Submit Quiz</button>
     </div>
 
-    <button id="logoutBtn" class="danger">Logout</button>
   </div>
 
-  <!-- JS files -->
+  <!-- JS -->
   <script src="../js/storage.js"></script>
   <script src="../js/quiz.js"></script>
+
 </body>
 </html>

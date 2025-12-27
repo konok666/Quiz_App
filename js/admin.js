@@ -114,11 +114,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const questions = getQuestions();
     const q = questions[index];
 
+    // Fill form
     questionIdEl.value = index;
     questionTextEl.value = q.question;
     optionEls.forEach((opt, i) => (opt.value = q.options[i]));
     correctAnswerEl.value = q.answer;
     difficultyEl.value = q.difficulty;
+    // 🔥 Switch to Add/Edit section
+    if (typeof showSection === "function") {
+      showSection("addQuestion");
+    }
   };
 
   window.deleteQuestion = function (index) {

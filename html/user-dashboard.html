@@ -14,9 +14,17 @@
   <div class="user-container">
     <h2>Welcome, <span id="userName"></span> 👋</h2>
 
-    <p>Ready to test your knowledge? Start a quiz below.</p>
+    <p>Ready to test your knowledge? Choose a difficulty below.</p>
 
-    <button id="startQuizBtn">Start Quiz</button>
+    <!-- DIFFICULTY SELECTION -->
+    <div class="difficulty-box">
+      <h3>Select Quiz Difficulty</h3>
+
+      <button onclick="startQuiz('easy')">Easy</button>
+      <button onclick="startQuiz('medium')">Medium</button>
+      <button onclick="startQuiz('hard')">Hard</button>
+    </div>
+
     <button id="logoutBtn" class="danger">Logout</button>
   </div>
 
@@ -24,8 +32,9 @@
   <script src="../js/storage.js"></script>
   <script src="../js/user.js"></script>
 
-  <!-- AUTH CHECK (DO NOT REMOVE) -->
+  <!-- AUTH + QUIZ LOGIC -->
   <script>
+    // Auth check
     const user = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!user || localStorage.getItem("role") !== "user") {
@@ -34,10 +43,17 @@
       document.getElementById("userName").innerText = user.name;
     }
 
+    // Start quiz with difficulty
+    function startQuiz(level) {
+      localStorage.setItem("quizDifficulty", level);
+      window.location.href = "quiz.html";
+    }
+
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("currentUser");
       localStorage.removeItem("role");
+      localStorage.removeItem("quizDifficulty");
       window.location.href = "login.html";
     });
   </script>
