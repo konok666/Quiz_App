@@ -17,7 +17,7 @@ let timeLeft = 10;
 
   if (!difficulty) {
     alert("Please select a difficulty first!");
-    window.location.href = "user-dashboard.html";
+    window.location.href = "user.html";
   }
 })();
 
@@ -38,7 +38,7 @@ const backBtn = document.getElementById("backBtn");
 if (backBtn) {
   backBtn.addEventListener("click", () => {
     localStorage.removeItem("quizDifficulty");
-    window.location.href = "user-dashboard.html";
+    window.location.href = "user.html";
   });
 }
 
@@ -51,7 +51,7 @@ function initQuiz() {
 
   if (questionsList.length === 0) {
     alert(`No ${difficulty} questions available.`);
-    window.location.href = "user-dashboard.html";
+    window.location.href = "user.html";
     return;
   }
 

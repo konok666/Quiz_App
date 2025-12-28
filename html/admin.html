@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | Quiz System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+<!-- MOBILE HEADER -->
+<header class="mobile-header">
+  <button id="menuToggle" class="menu-toggle">☰</button>
+  <span class="mobile-title">Quiz Admin</span>
+</header>
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <h2 class="logo">Quiz Admin</h2>
+    <ul class="menu">
+      <li onclick="showSection('users')" data-page="users">👤 Users</li>
+      <li onclick="showSection('questions')" data-page="questions">❓ Questions</li>
+      <li onclick="showSection('addQuestion')" data-page="addQuestion">➕ Add Question</li>
+      <li id="logoutBtn" class="danger">🚪 Logout</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <h2 id="adminWelcome">Welcome Admin 👑</h2>
+
+    <!-- USERS -->
+    <section id="users" class="section">
+      <h3>Registered Users</h3>
+
+      <!-- User Counter -->
+      <div class="stats">
+        <p>Total Users: <span id="userCount">0</span></p>
+      </div>
+
+      <ul id="usersList" class="users-list"></ul>
+    </section>
+
+    <!-- QUESTIONS -->
+    <section id="questions" class="section hidden">
+
+      
+
+      <!-- SEARCH + FILTER -->
+      <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="🔍 Search question..." />
+        <select id="difficultyFilter">
+          <option value="">All Difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <!-- Question Difficulty Counters -->
+      <div class="stats">
+        <p>Easy Questions: <span id="easyCount">0</span></p>
+        <p>Medium Questions: <span id="mediumCount">0</span></p>
+        <p>Hard Questions: <span id="hardCount">0</span></p>
+      </div>
+
+      <ul id="questionsList" class="questions-list"></ul>
+    </section>
+
+    <!-- ADD / EDIT QUESTION -->
+    <section id="addQuestion" class="section hidden">
+      <h3>Add / Edit Question</h3>
+
+      <form id="questionForm" class="question-form">
+        <input type="hidden" id="questionId" />
+
+        <!-- Question Text -->
+        <div class="form-group">
+          <input type="text" id="questionText" placeholder="Question Text" required />
+        </div>
+
+        <!-- Option Inputs (2 columns) -->
+        <div class="form-group options">
+          <input type="text" id="option0" placeholder="Option 1" required />
+          <input type="text" id="option1" placeholder="Option 2" required />
+          <input type="text" id="option2" placeholder="Option 3" required />
+          <input type="text" id="option3" placeholder="Option 4" required />
+        </div>
+
+        <!-- Correct Answer & Difficulty -->
+        <div class="form-group row">
+          <select id="correctAnswer" required>
+            <option value="">Correct Option</option>
+            <option value="0">Option 1</option>
+            <option value="1">Option 2</option>
+            <option value="2">Option 3</option>
+            <option value="3">Option 4</option>
+          </select>
+
+          <select id="difficulty" required>
+            <option value="">Difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Question</button>
+      </form>
+
+      <p id="adminError" class="error"></p>
+      <p id="adminSuccess" class="success"></p>
+    </section>
+  </main>
+</div>
+
+<script src="../js/storage.js"></script>
+<script src="../js/admin.js"></script>
+
+<script>
+  // Section switcher with persistence
+  function showSection(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    localStorage.setItem("currentSection", id);
+  }
+
+  // Auth check
+  if (localStorage.getItem("role") !== "admin") {
+    window.location.href = "admin-login.html";
+  }
+
+  // Restore last section after refresh
+  const savedSection = localStorage.getItem("currentSection");
+  if (savedSection) {
+    showSection(savedSection);
+  } else {
+    showSection("users"); // default section
+  }
+
+  // Sidebar toggle mobile
+  document.getElementById("menuToggle").onclick = () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  };
+
+  // Search and filter
+  const searchInput = document.getElementById("searchInput");
+  const difficultyFilter = document.getElementById("difficultyFilter");
+
+  function refreshQuestions() {
+    if(typeof loadQuestions === "function") loadQuestions();
+  }
+
+  searchInput?.addEventListener("input", refreshQuestions);
+  difficultyFilter?.addEventListener("change", refreshQuestions);
+</script>
+</body>
+</html>

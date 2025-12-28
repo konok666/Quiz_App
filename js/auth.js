@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("role", "user");
 
       // Redirect to user dashboard
-      window.location.href = "user-dashboard.html";
+      window.location.href = "user.html";
     });
   }
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("role", "admin");
 
       // Redirect to admin dashboard
-      window.location.href = "admin-dashboard.html";
+      window.location.href = "admin.html";
     });
   }
 
