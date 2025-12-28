@@ -55,8 +55,8 @@ function initQuiz() {
     return;
   }
 
-  questionsList.sort(() => Math.random() - 0.5); // Shuffle
-  questionsList = questionsList.slice(0, 10); // Limit to 10 questions
+  questionsList.sort(() => Math.random() - 0.5);
+  questionsList = questionsList.slice(0, 10);
 
   currentQuestionIndex = 0;
   score = 0;
@@ -68,6 +68,11 @@ function initQuiz() {
 // ---------- LOAD QUESTION ----------
 function loadQuestion() {
   clearInterval(timer);
+
+  // ✅ SHOW TIMER & SERIAL DURING QUIZ
+  timerEl.style.display = "inline";
+  questionSerialEl.style.display = "inline";
+
   feedbackEl.innerText = "";
   answersEl.innerHTML = "";
 
@@ -89,12 +94,11 @@ function loadQuestion() {
 
   startTimer(q.difficulty);
 
-  // Update Next/Submit button text
   if (currentQuestionIndex === questionsList.length - 1) {
     nextBtn.innerText = "Submit Quiz";
   } else {
     nextBtn.innerText = "Next";
-    nextBtn.disabled = true; // Wait for answer
+    nextBtn.disabled = true;
   }
 }
 
@@ -131,7 +135,7 @@ function checkAnswer(selectedIndex) {
 
   if (selectedIndex === q.answer) score++;
   scoreEl.innerText = `Score: ${score}`;
-  nextBtn.disabled = false; // Enable next button
+  nextBtn.disabled = false;
 }
 
 // ---------- DISABLE OPTIONS ----------
@@ -152,6 +156,12 @@ nextBtn.addEventListener("click", () => {
 
 // ---------- SHOW RESULT ----------
 function showResult() {
+  clearInterval(timer);
+
+  // ❌ HIDE TIMER & SERIAL IN RESULT PAGE
+  timerEl.style.display = "none";
+  questionSerialEl.style.display = "none";
+
   questionEl.innerText = "🎉 Quiz Completed!";
   answersEl.innerHTML = "";
   feedbackEl.innerHTML = `Final Score: ${score}/${questionsList.length}`;
@@ -161,15 +171,13 @@ function showResult() {
 
   const restartBtn = document.createElement("button");
   restartBtn.innerText = "Restart Quiz";
-  restartBtn.style.marginTop = "20px";
+  restartBtn.classList.add("restart-btn");
+
   restartBtn.onclick = () => {
-    currentQuestionIndex = 0;
-    score = 0;
-    scoreEl.innerText = `Score: ${score}`;
-    nextBtn.style.display = "inline-block";
-    loadQuestion();
     restartBtn.remove();
+    initQuiz();
   };
+
   document.querySelector(".quiz-footer").appendChild(restartBtn);
 }
 

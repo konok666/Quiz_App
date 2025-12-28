@@ -293,6 +293,25 @@ button.danger:hover {
 }
 
 /* ==============================
+   RESTART QUIZ BUTTON
+================================ */
+.quiz-footer button.restart-btn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.3s;
+}
+
+.quiz-footer button.restart-btn:hover {
+  background: #5a67d8;
+}
+
+/* ==============================
    ADMIN DASHBOARD
 ================================ */
 .admin-layout {
