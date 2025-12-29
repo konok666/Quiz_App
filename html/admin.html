@@ -19,11 +19,27 @@
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <h2 class="logo">Quiz Admin</h2>
+
     <ul class="menu">
-      <li onclick="showSection('users')" data-page="users">👤 Users</li>
-      <li onclick="showSection('questions')" data-page="questions">❓ Questions</li>
-      <li onclick="showSection('addQuestion')" data-page="addQuestion">➕ Add Question</li>
-      <li id="logoutBtn" class="danger">🚪 Logout</li>
+      <li onclick="showSection('users')" data-page="users" class="menu-item active">
+        <span class="icon">👤</span>
+        <span class="text">Users</span>
+      </li>
+
+      <li onclick="showSection('questions')" data-page="questions" class="menu-item">
+        <span class="icon">❓</span>
+        <span class="text">Questions</span>
+      </li>
+
+      <li onclick="showSection('addQuestion')" data-page="addQuestion" class="menu-item">
+        <span class="icon">➕</span>
+        <span class="text">Add Question</span>
+      </li>
+
+      <li id="logoutBtn" class="menu-item danger">
+        <span class="icon">🚪</span>
+        <span class="text">Logout</span>
+      </li>
     </ul>
   </aside>
 

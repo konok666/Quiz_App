@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   const difficultyFilter = document.getElementById("difficultyFilter");
 
-  // ===== COUNTERS =====
+  /* ===== COUNTERS ===== */
   const userCountEl = document.getElementById("userCount");
   const easyCountEl = document.getElementById("easyCount");
   const mediumCountEl = document.getElementById("mediumCount");
@@ -41,27 +41,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const sections = document.querySelectorAll(".section");
   const menuItems = document.querySelectorAll(".menu li[data-page]");
 
+  function setActiveMenu(page) {
+    menuItems.forEach(item => {
+      item.classList.remove("active");
+      if (item.dataset.page === page) {
+        item.classList.add("active");
+      }
+    });
+  }
+
   function showSection(sectionId) {
     sections.forEach(sec => sec.classList.add("hidden"));
     const activeSection = document.getElementById(sectionId);
     if (activeSection) activeSection.classList.remove("hidden");
 
-    // Persist current section
     localStorage.setItem("currentSection", sectionId);
+    setActiveMenu(sectionId);
   }
 
   // Restore section after refresh
-  const savedSection = localStorage.getItem("currentSection");
-  if (savedSection && document.getElementById(savedSection)) {
-    showSection(savedSection);
-  } else {
-    showSection("users"); // default section if none saved
-  }
+  const savedSection = localStorage.getItem("currentSection") || "users";
+  showSection(savedSection);
 
   // Menu click events
   menuItems.forEach(item => {
     item.addEventListener("click", () => {
-      const pageId = item.getAttribute("data-page");
+      const pageId = item.dataset.page;
       if (pageId) showSection(pageId);
     });
   });
@@ -90,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Update user counter
     if (userCountEl) userCountEl.textContent = users.length;
   }
 
@@ -98,15 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function loadQuestions() {
     let questions = getQuestions() || [];
 
-    // Update difficulty counters
-    const easyCount = questions.filter(q => q.difficulty === "easy").length;
-    const mediumCount = questions.filter(q => q.difficulty === "medium").length;
-    const hardCount = questions.filter(q => q.difficulty === "hard").length;
+    // Difficulty counters
+    const easy = questions.filter(q => q.difficulty === "easy").length;
+    const medium = questions.filter(q => q.difficulty === "medium").length;
+    const hard = questions.filter(q => q.difficulty === "hard").length;
 
-    if (easyCountEl) easyCountEl.textContent = easyCount;
-    if (mediumCountEl) mediumCountEl.textContent = mediumCount;
-    if (hardCountEl) hardCountEl.textContent = hardCount;
+    if (easyCountEl) easyCountEl.textContent = easy;
+    if (mediumCountEl) mediumCountEl.textContent = medium;
+    if (hardCountEl) hardCountEl.textContent = hard;
 
+    // Search + filter
     const searchText = searchInput?.value.toLowerCase() || "";
     const filterDifficulty = difficultyFilter?.value || "";
 
@@ -176,20 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const editIndex = questionIdEl.value;
 
     if (editIndex !== "") {
-      questions[editIndex] = {
-        question: questionText,
-        options,
-        answer: correctAnswer,
-        difficulty,
-      };
+      questions[editIndex] = { question: questionText, options, answer: correctAnswer, difficulty };
       showAdminSuccess("Question updated successfully!");
     } else {
-      questions.push({
-        question: questionText,
-        options,
-        answer: correctAnswer,
-        difficulty,
-      });
+      questions.push({ question: questionText, options, answer: correctAnswer, difficulty });
       showAdminSuccess("Question added successfully!");
     }
 
@@ -221,10 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
     correctAnswerEl.value = q.answer;
     difficultyEl.value = q.difficulty;
 
-    // Switch to Add/Edit section and persist
-    if (typeof showSection === "function") {
-      showSection("addQuestion");
-    }
+    showSection("addQuestion");
   };
 
   window.deleteQuestion = function (index) {
@@ -236,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadQuestions();
   };
 
-  /* ================= SEARCH + FILTER EVENTS ================= */
+  /* ================= SEARCH + FILTER ================= */
   searchInput?.addEventListener("input", loadQuestions);
   difficultyFilter?.addEventListener("change", loadQuestions);
 
