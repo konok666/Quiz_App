@@ -1,6 +1,4 @@
-/* =========================
-   GLOBAL RESET
-========================= */
+/* ================= GLOBAL RESET ================= */
 *,
 *::before,
 *::after {
@@ -10,71 +8,128 @@
   font-family: "Inter", "Segoe UI", system-ui, sans-serif;
 }
 
-/* =========================
-   BODY
-========================= */
+/* ================= BODY ================= */
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: #f1f5f9;
+}
+
+/* ================= DASHBOARD ================= */
+.dashboard {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px; /* important for mobile */
-}
-
-/* =========================
-   CONTAINER
-========================= */
-.user-container {
-  background: #ffffff;
   width: 100%;
-  max-width: 420px;
-  padding: 28px 22px;
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  animation: fadeIn 0.6s ease;
+  height: 100vh;
 }
 
-/* =========================
-   TEXT
-========================= */
-.user-container h2 {
-  font-size: 1.5rem;
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #0f172a, #020617);
+  color: #ffffff;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 1.6rem;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-.user-container p {
+/* ================= MENU ================= */
+.menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu li {
+  padding: 12px 16px;
+  border-radius: 10px;
+  cursor: pointer;
   font-size: 0.95rem;
-  color: #6b7280;
-  margin-bottom: 24px;
-  line-height: 1.5;
+  transition: background 0.25s ease;
 }
 
-/* =========================
-   DIFFICULTY SECTION
-========================= */
-.difficulty-box {
-  margin-bottom: 24px;
+.menu li:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.difficulty-box h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
+.menu li.active {
+  background: #2563eb;
+}
+
+.menu li.danger {
+  margin-top: auto;
+  background: #dc2626;
+}
+
+.menu li.danger:hover {
+  background: #b91c1c;
+}
+
+/* ================= MAIN CONTENT ================= */
+.content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+/* ================= SCROLLBAR ================= */
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 8px;
+}
+
+/* ================= SECTIONS ================= */
+.section {
+  animation: fadeIn 0.35s ease;
+}
+
+.section.hidden {
+  display: none;
+}
+
+.section h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #1f2937;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.card p {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
   color: #374151;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* ================= DIFFICULTY BUTTONS ================= */
+.difficulty-box {
+  display: flex;
+  gap: 16px;
+}
+
 .difficulty-box button {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
   border: none;
   font-size: 1rem;
   font-weight: 600;
@@ -82,61 +137,126 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Easy */
-.difficulty-box button:nth-of-type(1) {
+.easy {
   background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
+  color: #ffffff;
 }
 
-/* Medium */
-.difficulty-box button:nth-of-type(2) {
+.medium {
   background: linear-gradient(135deg, #facc15, #eab308);
   color: #1f2937;
 }
 
-/* Hard */
-.difficulty-box button:nth-of-type(3) {
+.hard {
   background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
+  color: #ffffff;
 }
 
-/* Hover & active (desktop + touch) */
 .difficulty-box button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.25);
 }
 
 .difficulty-box button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
 }
 
-/* =========================
-   LOGOUT BUTTON
-========================= */
-button.danger {
-  width: 100%;
-  padding: 13px;
+/* ================= QUIZ AREA ================= */
+.quiz-area {
+  margin-top: 24px;
+}
+
+/* ================= HISTORY ================= */
+.history-list {
+  list-style: none;
+  max-width: 520px;
+}
+
+.history-list li {
+  background: #ffffff;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* ================= MODAL ================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 16px;
+  width: 92%;
+  max-width: 380px;
+  text-align: center;
+  animation: scaleIn 0.25s ease;
+}
+
+.modal-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.quiz-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 14px 0;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.warning {
+  font-size: 0.85rem;
+  color: #dc2626;
+  margin: 16px 0;
+}
+
+/* ================= MODAL ACTIONS ================= */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancel,
+.btn-start {
+  flex: 1;
+  padding: 11px;
   border-radius: 12px;
   border: none;
-  background: #111827;
-  color: white;
-  font-size: 0.95rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-button.danger:hover {
-  background: #000000;
+.btn-cancel {
+  background: #e5e7eb;
 }
 
-/* =========================
-   ANIMATION
-========================= */
+.btn-start {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* ================= ANIMATIONS ================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -144,21 +264,45 @@ button.danger:hover {
   }
 }
 
-/* =========================
-   RESPONSIVE TWEAKS
-========================= */
-@media (max-width: 480px) {
-  .user-container {
-    padding: 22px 18px;
-    border-radius: 14px;
+@keyframes scaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+    height: auto;
   }
 
-  .user-container h2 {
-    font-size: 1.35rem;
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
   }
 
-  .difficulty-box button {
-    font-size: 0.95rem;
-    padding: 13px;
+  .logo {
+    display: none;
+  }
+
+  .menu {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .menu li.danger {
+    margin-top: 0;
+  }
+
+  .difficulty-box {
+    flex-direction: column;
   }
 }

@@ -1,10 +1,12 @@
+/* ================= QUIZ LOGIC ================= */
+
 let questionsList = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let timer;
 let timeLeft = 10;
 
-// ---------- ROLE + DIFFICULTY PROTECTION ----------
+/* ================= ACCESS PROTECTION ================= */
 (function checkAccess() {
   const role = localStorage.getItem("role");
   const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -21,7 +23,7 @@ let timeLeft = 10;
   }
 })();
 
-// ---------- ELEMENTS ----------
+/* ================= ELEMENTS ================= */
 const questionSerialEl = document.getElementById("questionSerial");
 const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
@@ -34,15 +36,15 @@ const nextBtn = document.getElementById("nextBtn");
 const submitBtn = document.getElementById("submitBtn");
 const backBtn = document.getElementById("backBtn");
 
-// ---------- BACK TO DASHBOARD ----------
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
+/* ================= BACK BUTTON ================= */
+backBtn.addEventListener("click", () => {
+  if (confirm("Quit quiz? Progress will be lost.")) {
     localStorage.removeItem("quizDifficulty");
     window.location.href = "user.html";
-  });
-}
+  }
+});
 
-// ---------- INIT QUIZ ----------
+/* ================= INIT QUIZ ================= */
 function initQuiz() {
   const difficulty = localStorage.getItem("quizDifficulty");
   const allQuestions = getQuestions();
@@ -65,23 +67,22 @@ function initQuiz() {
   loadQuestion();
 }
 
-// ---------- LOAD QUESTION ----------
+/* ================= LOAD QUESTION ================= */
 function loadQuestion() {
   clearInterval(timer);
 
-  // ✅ SHOW TIMER & SERIAL DURING QUIZ
-  timerEl.style.display = "inline";
-  questionSerialEl.style.display = "inline";
-
   feedbackEl.innerText = "";
   answersEl.innerHTML = "";
+  nextBtn.disabled = true;
 
   const q = questionsList[currentQuestionIndex];
+
   questionSerialEl.innerText = `${currentQuestionIndex + 1}.`;
   questionEl.innerText = q.question;
 
   progressText.innerText =
     `Question ${currentQuestionIndex + 1} of ${questionsList.length}`;
+
   progressBar.style.width =
     `${((currentQuestionIndex + 1) / questionsList.length) * 100}%`;
 
@@ -94,24 +95,22 @@ function loadQuestion() {
 
   startTimer(q.difficulty);
 
-  if (currentQuestionIndex === questionsList.length - 1) {
-    nextBtn.innerText = "Submit Quiz";
-  } else {
-    nextBtn.innerText = "Next";
-    nextBtn.disabled = true;
-  }
+  nextBtn.innerText =
+    currentQuestionIndex === questionsList.length - 1
+      ? "Submit Quiz"
+      : "Next";
 }
 
-// ---------- TIMER ----------
+/* ================= TIMER ================= */
 function startTimer(level) {
   timeLeft = level === "easy" ? 15 : level === "medium" ? 10 : 7;
-  let count = timeLeft;
-  timerEl.innerText = `⏱ ${count}s`;
+  timerEl.innerText = `⏱ ${timeLeft}s`;
 
   timer = setInterval(() => {
-    count--;
-    timerEl.innerText = `⏱ ${count}s`;
-    if (count <= 0) {
+    timeLeft--;
+    timerEl.innerText = `⏱ ${timeLeft}s`;
+
+    if (timeLeft <= 0) {
       clearInterval(timer);
       feedbackEl.innerText = "⏰ Time's up!";
       disableButtons();
@@ -120,9 +119,10 @@ function startTimer(level) {
   }, 1000);
 }
 
-// ---------- CHECK ANSWER ----------
+/* ================= CHECK ANSWER ================= */
 function checkAnswer(selectedIndex) {
   clearInterval(timer);
+
   const q = questionsList[currentQuestionIndex];
   const buttons = document.querySelectorAll(".answers button");
 
@@ -134,17 +134,19 @@ function checkAnswer(selectedIndex) {
   });
 
   if (selectedIndex === q.answer) score++;
+
   scoreEl.innerText = `Score: ${score}`;
   nextBtn.disabled = false;
 }
 
-// ---------- DISABLE OPTIONS ----------
+/* ================= DISABLE OPTIONS ================= */
 function disableButtons() {
-  document.querySelectorAll(".answers button")
-    .forEach(btn => btn.disabled = true);
+  document
+    .querySelectorAll(".answers button")
+    .forEach(btn => (btn.disabled = true));
 }
 
-// ---------- NEXT / SUBMIT ----------
+/* ================= NEXT / SUBMIT ================= */
 nextBtn.addEventListener("click", () => {
   if (currentQuestionIndex === questionsList.length - 1) {
     showResult();
@@ -154,32 +156,43 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
-// ---------- SHOW RESULT ----------
+/* ================= RESULT ================= */
 function showResult() {
   clearInterval(timer);
 
-  // ❌ HIDE TIMER & SERIAL IN RESULT PAGE
-  timerEl.style.display = "none";
   questionSerialEl.style.display = "none";
+  timerEl.style.display = "none";
 
   questionEl.innerText = "🎉 Quiz Completed!";
   answersEl.innerHTML = "";
   feedbackEl.innerHTML = `Final Score: ${score}/${questionsList.length}`;
 
   nextBtn.style.display = "none";
-  submitBtn.style.display = "none";
+  submitBtn.style.display = "inline-block";
 
-  const restartBtn = document.createElement("button");
-  restartBtn.innerText = "Restart Quiz";
-  restartBtn.classList.add("restart-btn");
-
-  restartBtn.onclick = () => {
-    restartBtn.remove();
-    initQuiz();
+  submitBtn.onclick = () => {
+    saveQuizHistory();
+    window.location.href = "user.html";
   };
-
-  document.querySelector(".quiz-footer").appendChild(restartBtn);
 }
 
-// ---------- START QUIZ ----------
+/* ================= SAVE HISTORY ================= */
+function saveQuizHistory() {
+  const difficulty = localStorage.getItem("quizDifficulty");
+
+  const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  history.push({
+    difficulty,
+    score,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("quizHistory", JSON.stringify(history));
+
+  const lastScores = JSON.parse(localStorage.getItem("lastScores")) || {};
+  lastScores[difficulty] = score;
+  localStorage.setItem("lastScores", JSON.stringify(lastScores));
+}
+
+/* ================= START QUIZ ================= */
 window.onload = initQuiz;
