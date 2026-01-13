@@ -35,14 +35,20 @@ body {
   min-height: 100vh;
 }
 
-/* ================= SIDEBAR ================= */
+/* ================= SIDEBAR (ADMIN STYLE) ================= */
 .sidebar {
   width: 260px;
-  background: linear-gradient(180deg, #0f172a, #020617);
+  background: linear-gradient(180deg, #0f172a, #1e293b); /* admin-style */
   color: #fff;
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
 }
 
 .logo {
@@ -51,6 +57,7 @@ body {
   text-align: center;
   margin-bottom: 30px;
   letter-spacing: 1px;
+  color: #fff;
 }
 
 .menu {
@@ -66,29 +73,37 @@ body {
   cursor: pointer;
   font-weight: 500;
   transition: all 0.25s ease;
+  color: #cbd5f5; /* inactive color */
 }
 
 .menu li:hover {
   background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: translateX(4px);
 }
 
 .menu li.active {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
 }
 
 .menu li.danger {
   margin-top: auto;
-  background: #dc2626;
+  background: rgba(239, 68, 68, 0.15);
+  color: #fecaca;
 }
 
 .menu li.danger:hover {
-  background: #b91c1c;
+  background: rgba(239, 68, 68, 0.3);
+  color: #fff;
 }
 
 /* ================= CONTENT ================= */
 .content {
   flex: 1;
   padding: 28px 32px;
+  margin-left: 260px;
 }
 
 .section h2 {
@@ -139,6 +154,25 @@ body {
 }
 
 /* ================= QUIZ ================= */
+.quiz-intro {
+  background: #ffffff;
+  padding: 22px 24px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+.quiz-intro p {
+  margin-bottom: 12px;
+}
+
+.quiz-intro strong {
+  color: #2563eb;
+}
+
 .difficulty-box {
   display: flex;
   gap: 20px;
@@ -313,12 +347,8 @@ body {
   }
 
   .sidebar {
-    position: fixed;
     left: -260px;
-    top: 0;
-    height: 100%;
     transition: left 0.3s ease;
-    z-index: 1000;
   }
 
   .sidebar.show {
