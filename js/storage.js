@@ -1,6 +1,4 @@
-/* ==============================
-   STORAGE HELPERS & DEFAULT DATA
-================================ */
+/* ============= STORAGE HELPERS & DEFAULT DATA ============= */
 
 // ---------- DEFAULT ADMIN ----------
 const DEFAULT_ADMIN = {
@@ -40,6 +38,15 @@ function getQuestions() {
 
 function saveQuestions(questions) {
   localStorage.setItem("questions", JSON.stringify(questions));
+}
+
+// ---------- ADMIN FUNCTIONS ----------
+function getAdmin() {
+  return JSON.parse(localStorage.getItem("admin"));
+}
+
+function saveAdmin(admin) {
+  localStorage.setItem("admin", JSON.stringify(admin));
 }
 
 // ---------- DEFAULT QUESTIONS ----------

@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Dashboard | Quiz System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/admin.css" />
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>
 
+<!-- 🔔 WELCOME TOAST -->
+<div id="welcomeToast" class="toast hidden">
+  <span id="toastGreeting"></span>
+</div>
+
 <!-- MOBILE HEADER -->
 <header class="mobile-header">
-  <button id="menuToggle" class="menu-toggle">☰</button>
-  <span class="mobile-title">Quiz Admin</span>
+  <button id="menuToggle">☰</button>
+  <span>Quiz Admin</span>
 </header>
 
 <div class="admin-layout">
@@ -19,103 +24,118 @@
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <h2 class="logo">Quiz Admin</h2>
-
     <ul class="menu">
-      <li onclick="showSection('users')" data-page="users" class="menu-item active">
-        <span class="icon">👤</span>
-        <span class="text">Users</span>
-      </li>
-
-      <li onclick="showSection('questions')" data-page="questions" class="menu-item">
-        <span class="icon">❓</span>
-        <span class="text">Questions</span>
-      </li>
-
-      <li onclick="showSection('addQuestion')" data-page="addQuestion" class="menu-item">
-        <span class="icon">➕</span>
-        <span class="text">Add Question</span>
-      </li>
-
-      <li id="logoutBtn" class="menu-item danger">
-        <span class="icon">🚪</span>
-        <span class="text">Logout</span>
-      </li>
+      <li data-page="users" class="menu-item active">👤 Users</li>
+      <li data-page="questions" class="menu-item">❓ Questions</li>
+      <li data-page="addQuestion" class="menu-item">➕ Add Question</li>
+      <li id="logoutBtn" class="menu-item danger">🚪 Logout</li>
     </ul>
   </aside>
 
   <!-- MAIN CONTENT -->
   <main class="content">
-    <h2 id="adminWelcome">Welcome Admin 👑</h2>
 
-    <!-- USERS -->
-    <section id="users" class="section">
-      <h3>Registered Users</h3>
+    <!-- 📊 DASHBOARD -->
+    <section id="dashboardWelcome" class="section">
+      <h2 class="page-title">📊 Dashboard Overview</h2>
 
-      <!-- User Counter -->
-      <div class="stats">
-        <p>Total Users: <span id="userCount">0</span></p>
+      <div class="dashboard-cards">
+        <div class="dash-card">
+          <h4>Total Users</h4>
+          <p id="dashUsers">0</p>
+        </div>
+
+        <div class="dash-card">
+          <h4>Total Questions</h4>
+          <p id="dashQuestions">0</p>
+        </div>
+
+        <div class="dash-card easy">
+          <h4>Easy</h4>
+          <p id="dashEasy">0</p>
+        </div>
+
+        <div class="dash-card medium">
+          <h4>Medium</h4>
+          <p id="dashMedium">0</p>
+        </div>
+
+        <div class="dash-card hard">
+          <h4>Hard</h4>
+          <p id="dashHard">0</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 👥 USERS -->
+    <section id="users" class="section hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="page-title">👥 Users</h2>
+          <p class="section-subtitle">
+            Total Users: <span id="userCount">0</span>
+          </p>
+        </div>
       </div>
 
       <ul id="usersList" class="users-list"></ul>
     </section>
 
-    <!-- QUESTIONS -->
+    <!-- ❓ QUESTIONS -->
     <section id="questions" class="section hidden">
+      <div class="section-header">
+        <h2 class="page-title">❓ Questions</h2>
+      </div>
 
-      
-
-      <!-- SEARCH + FILTER -->
       <div class="filter-bar">
-        <input type="text" id="searchInput" placeholder="🔍 Search question..." />
+        <input id="searchInput" placeholder="Search questions">
         <select id="difficultyFilter">
-          <option value="">All Difficulties</option>
+          <option value="">All</option>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
       </div>
 
-      <!-- Question Difficulty Counters -->
       <div class="stats">
-        <p>Easy Questions: <span id="easyCount">0</span></p>
-        <p>Medium Questions: <span id="mediumCount">0</span></p>
-        <p>Hard Questions: <span id="hardCount">0</span></p>
+        <p>Easy <span id="easyCount">0</span></p>
+        <p>Medium <span id="mediumCount">0</span></p>
+        <p>Hard <span id="hardCount">0</span></p>
       </div>
 
       <ul id="questionsList" class="questions-list"></ul>
     </section>
 
-    <!-- ADD / EDIT QUESTION -->
+    <!-- ➕ ADD / EDIT QUESTION -->
     <section id="addQuestion" class="section hidden">
-      <h3>Add / Edit Question</h3>
+      <div class="section-header">
+        <h2 class="page-title">➕ Add / Edit Question</h2>
+      </div>
 
       <form id="questionForm" class="question-form">
-        <input type="hidden" id="questionId" />
+        <input type="hidden" id="questionId">
 
-        <!-- Question Text -->
         <div class="form-group">
-          <input type="text" id="questionText" placeholder="Question Text" required />
+          <input id="questionText" placeholder="Question" required>
         </div>
 
-        <!-- Option Inputs (2 columns) -->
-        <div class="form-group options">
-          <input type="text" id="option0" placeholder="Option 1" required />
-          <input type="text" id="option1" placeholder="Option 2" required />
-          <input type="text" id="option2" placeholder="Option 3" required />
-          <input type="text" id="option3" placeholder="Option 4" required />
+        <div class="form-group">
+          <input id="option0" placeholder="Option 1">
+          <input id="option1" placeholder="Option 2">
+          <input id="option2" placeholder="Option 3">
+          <input id="option3" placeholder="Option 4">
         </div>
 
-        <!-- Correct Answer & Difficulty -->
         <div class="form-group row">
-          <select id="correctAnswer" required>
-            <option value="">Correct Option</option>
+          <select id="correctAnswer">
+            <option value="">Correct Answer</option>
             <option value="0">Option 1</option>
             <option value="1">Option 2</option>
             <option value="2">Option 3</option>
             <option value="3">Option 4</option>
           </select>
 
-          <select id="difficulty" required>
+          <select id="difficulty">
             <option value="">Difficulty</option>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
@@ -123,54 +143,18 @@
           </select>
         </div>
 
-        <button type="submit" class="btn-primary">Save Question</button>
-      </form>
+        <button class="btn-primary">Save Question</button>
 
-      <p id="adminError" class="error"></p>
-      <p id="adminSuccess" class="success"></p>
+        <p id="adminError" class="error"></p>
+        <p id="adminSuccess" class="success"></p>
+      </form>
     </section>
+
   </main>
+
 </div>
 
 <script src="../js/storage.js"></script>
 <script src="../js/admin.js"></script>
-
-<script>
-  // Section switcher with persistence
-  function showSection(id) {
-    document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
-    localStorage.setItem("currentSection", id);
-  }
-
-  // Auth check
-  if (localStorage.getItem("role") !== "admin") {
-    window.location.href = "admin-login.html";
-  }
-
-  // Restore last section after refresh
-  const savedSection = localStorage.getItem("currentSection");
-  if (savedSection) {
-    showSection(savedSection);
-  } else {
-    showSection("users"); // default section
-  }
-
-  // Sidebar toggle mobile
-  document.getElementById("menuToggle").onclick = () => {
-    document.getElementById("sidebar").classList.toggle("open");
-  };
-
-  // Search and filter
-  const searchInput = document.getElementById("searchInput");
-  const difficultyFilter = document.getElementById("difficultyFilter");
-
-  function refreshQuestions() {
-    if(typeof loadQuestions === "function") loadQuestions();
-  }
-
-  searchInput?.addEventListener("input", refreshQuestions);
-  difficultyFilter?.addEventListener("change", refreshQuestions);
-</script>
 </body>
 </html>

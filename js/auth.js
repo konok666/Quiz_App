@@ -1,12 +1,9 @@
 // ---------- CREATE PERMANENT ADMIN ACCOUNT ----------
 if (!localStorage.getItem("admin")) {
-  localStorage.setItem(
-    "admin",
-    JSON.stringify({
-      email: "admin@quiz.com",   // default admin email
-      password: "admin123"       // default admin password
-    })
-  );
+  saveAdmin({
+    email: "admin@quiz.com",   // default admin email
+    password: "admin123"       // default admin password
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -77,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const email = document.getElementById("adminEmail").value.trim();
       const password = document.getElementById("adminPassword").value.trim();
 
-      const admin = JSON.parse(localStorage.getItem("admin"));
+      const admin = getAdmin(); // <-- updated to use helper
 
       if (!admin || email !== admin.email || password !== admin.password) {
         document.getElementById("error").innerText = "Invalid admin credentials!";
@@ -85,6 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       localStorage.setItem("role", "admin");
+      localStorage.setItem("showWelcome", "true");
+
 
       // Redirect to admin dashboard
       window.location.href = "admin.html";

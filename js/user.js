@@ -1,3 +1,27 @@
+/* ========= AUTO MIGRATE OLD HISTORY ========= */
+(function migrateHistory() {
+  let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  let changed = false;
+
+  history = history.map(h => {
+    // Old format → new format
+    if (!h.datetime && h.date && h.time) {
+      const combined = new Date(`${h.date} ${h.time}`);
+      if (!isNaN(combined)) {
+        h.datetime = combined.toISOString();
+        delete h.date;
+        delete h.time;
+        changed = true;
+      }
+    }
+    return h;
+  });
+
+  if (changed) {
+    localStorage.setItem("quizHistory", JSON.stringify(history));
+  }
+})();
+
 /* ================= USER DASHBOARD LOGIC ================= */
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -11,8 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ========= PROFILE ========= */
-  document.getElementById("profileName").textContent = user.name;       // Welcome message
-  document.getElementById("profileNameCard").textContent = user.name;   // Inside card
+  document.getElementById("profileName").textContent = user.name;
   document.getElementById("profileEmail").textContent = user.email;
 
   /* ========= SIDEBAR NAVIGATION ========= */
@@ -21,53 +44,68 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.querySelector(".sidebar");
 
   function activateSection(id) {
-    menuItems.forEach(i => i.classList.toggle("active", i.dataset.section === id));
-    sections.forEach(s => s.classList.toggle("hidden", s.id !== id));
+    menuItems.forEach(item =>
+      item.classList.toggle("active", item.dataset.section === id)
+    );
+    sections.forEach(section =>
+      section.classList.toggle("hidden", section.id !== id)
+    );
     localStorage.setItem("activeSection", id);
   }
 
-  // Restore last section or show profile on first login
-  const lastSection = localStorage.getItem("activeSection");
-  activateSection(lastSection || "profile");
+  activateSection(localStorage.getItem("activeSection") || "profile");
 
-  menuItems.forEach(i =>
-    i.addEventListener("click", () => {
-      activateSection(i.dataset.section);
+  menuItems.forEach(item => {
+    item.addEventListener("click", () => {
+      activateSection(item.dataset.section);
       sidebar.classList.remove("show");
-    })
-  );
+    });
+  });
 
-  /* ========= LOGOUT ========= */
+  /* ========= LOGOUT (SECURE) ========= */
   document.querySelector(".menu .danger").onclick = () => {
-    localStorage.clear();
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("role");
+    localStorage.removeItem("activeSection");
     window.location.href = "login.html";
   };
 
-  /* ========= MOBILE SIDEBAR TOGGLE ========= */
+  /* ========= MOBILE SIDEBAR ========= */
   document.getElementById("menuToggle").onclick = () => {
     sidebar.classList.toggle("show");
   };
 
   /* ========= QUIZ SETTINGS ========= */
   let selectedDifficulty = "easy";
-  const settings = { easy: { time: 15 }, medium: { time: 10 }, hard: { time: 7 } };
+  const settings = {
+    easy: { time: 15 },
+    medium: { time: 10 },
+    hard: { time: 7 }
+  };
 
   window.openModal = (level) => {
     selectedDifficulty = level;
-    document.getElementById("modalDifficulty").textContent = level.charAt(0).toUpperCase() + level.slice(1);
+
+    document.getElementById("modalDifficulty").textContent =
+      level.charAt(0).toUpperCase() + level.slice(1);
 
     const questions = JSON.parse(localStorage.getItem("questions")) || [];
-    const count = questions.filter(q => q.difficulty === level).length;
-    document.getElementById("modalQuestions").textContent = count;
+    document.getElementById("modalQuestions").textContent =
+      questions.filter(q => q.difficulty === level).length;
 
-    document.getElementById("modalTime").textContent = settings[level].time + " sec";
+    document.getElementById("modalTime").textContent =
+      settings[level].time + " sec";
+
     const lastScores = JSON.parse(localStorage.getItem("lastScores")) || {};
-    document.getElementById("modalLastScore").textContent = lastScores[level] || 0;
+    document.getElementById("modalLastScore").textContent =
+      lastScores[level] || 0;
 
     document.getElementById("quizModal").classList.remove("hidden");
   };
 
-  window.closeModal = () => document.getElementById("quizModal").classList.add("hidden");
+  window.closeModal = () => {
+    document.getElementById("quizModal").classList.add("hidden");
+  };
 
   window.startQuiz = () => {
     localStorage.setItem("quizDifficulty", selectedDifficulty);
@@ -75,28 +113,39 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "quiz.html";
   };
 
-  /* ========= HISTORY LOGIC ========= */
+  /* ========= HISTORY ========= */
   let lastDeleted = null;
 
   function loadHistory() {
     const body = document.getElementById("historyTableBody");
     body.innerHTML = "";
+
     let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
 
-    // Apply filters
     const diffFilter = document.getElementById("difficultyFilter").value;
     const dateFilter = document.getElementById("dateFilter").value;
 
-    if (diffFilter !== "all") history = history.filter(h => h.difficulty === diffFilter);
-    if (dateFilter) history = history.filter(h => h.datetime?.slice(0, 10) === dateFilter);
+    if (diffFilter !== "all") {
+      history = history.filter(h => h.difficulty === diffFilter);
+    }
+
+    if (dateFilter) {
+      history = history.filter(h =>
+        h.datetime && h.datetime.slice(0, 10) === dateFilter
+      );
+    }
 
     if (!history.length) {
-      body.innerHTML = `<tr><td colspan="5" class="empty">No quiz attempts found</td></tr>`;
+      body.innerHTML = `
+        <tr>
+          <td colspan="5" class="empty">No quiz attempts found</td>
+        </tr>`;
       return;
     }
 
     history.forEach((h, index) => {
       let dateStr = "-", timeStr = "-";
+
       if (h.datetime) {
         const dt = new Date(h.datetime);
         if (!isNaN(dt)) {
@@ -111,14 +160,17 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${h.score}</td>
         <td>${dateStr}</td>
         <td>${timeStr}</td>
-        <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        <td>
+          <button class="delete-btn" data-index="${index}">Delete</button>
+        </td>
       `;
       body.appendChild(row);
     });
 
-    // Add delete button listeners
     document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", () => deleteHistoryItem(parseInt(btn.dataset.index)));
+      btn.addEventListener("click", () => {
+        deleteHistoryItem(parseInt(btn.dataset.index));
+      });
     });
   }
 
@@ -132,32 +184,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.getElementById("undoBtn").onclick = () => {
-    if (lastDeleted) {
-      const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-      history.unshift(lastDeleted);
-      localStorage.setItem("quizHistory", JSON.stringify(history));
-      lastDeleted = null;
-      document.getElementById("undoBtn").disabled = true;
-      loadHistory();
-      loadStats();
-    }
+    if (!lastDeleted) return;
+
+    const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+    history.unshift(lastDeleted);
+    localStorage.setItem("quizHistory", JSON.stringify(history));
+
+    lastDeleted = null;
+    document.getElementById("undoBtn").disabled = true;
+    loadHistory();
+    loadStats();
   };
 
-  /* ========= FILTERS ========= */
   document.getElementById("difficultyFilter").addEventListener("change", loadHistory);
   document.getElementById("dateFilter").addEventListener("change", loadHistory);
 
-  /* ========= USER STATS ========= */
+  /* ========= STATS ========= */
   function loadStats() {
     const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
     const levels = ["easy", "medium", "hard"];
 
-    levels.forEach(l => {
-      const data = history.filter(h => h.difficulty === l);
-      const total = data.reduce((s, h) => s + h.score, 0);
-      document.getElementById(`${l}Attempts`).textContent = data.length;
-      document.getElementById(`${l}Best`).textContent = data.length ? Math.max(...data.map(h => h.score)) : 0;
-      document.getElementById(`${l}Avg`).textContent = data.length ? (total / data.length).toFixed(2) : 0;
+    levels.forEach(level => {
+      const data = history.filter(h => h.difficulty === level);
+      const total = data.reduce((sum, h) => sum + h.score, 0);
+
+      document.getElementById(`${level}Attempts`).textContent = data.length;
+      document.getElementById(`${level}Best`).textContent =
+        data.length ? Math.max(...data.map(h => h.score)) : 0;
+      document.getElementById(`${level}Avg`).textContent =
+        data.length ? (total / data.length).toFixed(2) : 0;
     });
   }
 
@@ -166,15 +221,14 @@ document.addEventListener("DOMContentLoaded", () => {
   loadStats();
 });
 
-/* ================= GLOBAL SAVE QUIZ RESULT ================= */
+/* ================= SAVE QUIZ RESULT ================= */
 function saveQuizResult(difficulty, score) {
   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-  const now = new Date();
 
   history.unshift({
     difficulty,
     score,
-    datetime: now.toISOString()  // store full ISO datetime
+    datetime: new Date().toISOString() // ✅ always valid
   });
 
   localStorage.setItem("quizHistory", JSON.stringify(history));
