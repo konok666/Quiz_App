@@ -1,4 +1,4 @@
-/* ========= AUTO MIGRATE OLD HISTORY ========= */
+/* ================= AUTO MIGRATE OLD HISTORY ================= */
 (function migrateHistory() {
   let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
   let changed = false;
@@ -22,7 +22,7 @@
   }
 })();
 
-/* ================= USER DASHBOARD LOGIC ================= */
+/* ================= USER DASHBOARD ================= */
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ========= AUTH ========= */
@@ -36,12 +36,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ========= PROFILE ========= */
   document.getElementById("profileName").textContent = user.name;
+  document.getElementById("profileNameCard").textContent = user.name;
   document.getElementById("profileEmail").textContent = user.email;
 
-  /* ========= SIDEBAR NAVIGATION ========= */
+  /* ========= SIDEBAR ========= */
+  const sidebar = document.querySelector(".sidebar");
   const menuItems = document.querySelectorAll(".menu li[data-section]");
   const sections = document.querySelectorAll(".section");
-  const sidebar = document.querySelector(".sidebar");
 
   function activateSection(id) {
     menuItems.forEach(item =>
@@ -62,17 +63,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ========= LOGOUT (SECURE) ========= */
-  document.querySelector(".menu .danger").onclick = () => {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("role");
-    localStorage.removeItem("activeSection");
-    window.location.href = "login.html";
-  };
-
-  /* ========= MOBILE SIDEBAR ========= */
   document.getElementById("menuToggle").onclick = () => {
     sidebar.classList.toggle("show");
+  };
+
+  document.getElementById("sidebarClose").onclick = () => {
+    sidebar.classList.remove("show");
+  };
+
+  document.querySelector(".menu .danger").onclick = () => {
+    localStorage.clear();
+    window.location.href = "login.html";
   };
 
   /* ========= QUIZ SETTINGS ========= */
@@ -168,9 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        deleteHistoryItem(parseInt(btn.dataset.index));
-      });
+      btn.onclick = () => deleteHistoryItem(parseInt(btn.dataset.index));
     });
   }
 
@@ -196,8 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadStats();
   };
 
-  document.getElementById("difficultyFilter").addEventListener("change", loadHistory);
-  document.getElementById("dateFilter").addEventListener("change", loadHistory);
+  document.getElementById("difficultyFilter").onchange = loadHistory;
+  document.getElementById("dateFilter").onchange = loadHistory;
 
   /* ========= STATS ========= */
   function loadStats() {
@@ -228,7 +227,7 @@ function saveQuizResult(difficulty, score) {
   history.unshift({
     difficulty,
     score,
-    datetime: new Date().toISOString() // ✅ always valid
+    datetime: new Date().toISOString() // ✅ ALWAYS VALID
   });
 
   localStorage.setItem("quizHistory", JSON.stringify(history));

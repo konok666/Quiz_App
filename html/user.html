@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<!-- MOBILE HEADER -->
+<!-- ================= MOBILE HEADER ================= -->
 <header class="mobile-header">
   <button id="menuToggle">☰</button>
   <h3>Quiz App</h3>
@@ -16,9 +16,13 @@
 
 <div class="dashboard">
 
-  <!-- SIDEBAR -->
+  <!-- ================= SIDEBAR ================= -->
   <aside class="sidebar">
+    <!-- CLOSE BUTTON (MOBILE) -->
+    <button class="sidebar-close" id="sidebarClose">✕</button>
+
     <h2 class="logo">Quiz App</h2>
+
     <ul class="menu">
       <li data-section="profile" class="active">👤 Profile</li>
       <li data-section="quiz">📝 Start Quiz</li>
@@ -27,12 +31,13 @@
     </ul>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- ================= MAIN CONTENT ================= -->
   <main class="content">
 
-    <!-- PROFILE -->
+    <!-- ========= PROFILE ========= -->
     <section id="profile" class="section">
-      <h2>Welcome, <span id="profileName"></span>!</h2>
+      <h2>Welcome, <span id="profileName"></span> 👋</h2>
+
       <div class="card">
         <p><strong>Name:</strong> <span id="profileNameCard"></span></p>
         <p><strong>Email:</strong> <span id="profileEmail"></span></p>
@@ -62,14 +67,14 @@
       </div>
     </section>
 
-    <!-- QUIZ -->
+    <!-- ========= START QUIZ ========= -->
     <section id="quiz" class="section hidden">
       <h2>📝 Start Quiz</h2>
-      
+
       <div class="quiz-intro card">
-        <p>Welcome! Ready to challenge yourself today?</p>
-        <p>Pick a difficulty level and test your skills. Remember: <strong>"Every expert was once a beginner!"</strong></p>
-        <p>Each quiz has a limited time. Stay focused, do your best, and learn from mistakes. Good luck! 🍀</p>
+        <p>🔥 Ready to challenge yourself?</p>
+        <p><strong>“Every expert was once a beginner.”</strong></p>
+        <p>Focus, stay calm, and give your best. Good luck 🍀</p>
       </div>
 
       <div class="difficulty-box">
@@ -79,27 +84,19 @@
       </div>
     </section>
 
-
-    <!-- HISTORY -->
+    <!-- ========= HISTORY ========= -->
     <section id="history" class="section hidden">
-      <h2>Quiz History</h2>
+      <h2>📊 Quiz History</h2>
 
       <div class="history-controls">
-        <label>
-          Difficulty:
-          <select id="difficultyFilter">
-            <option value="all">All</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </label>
+        <select id="difficultyFilter">
+          <option value="all">All</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
 
-        <label>
-          Date:
-          <input type="date" id="dateFilter" />
-        </label>
-
+        <input type="date" id="dateFilter" />
         <button id="undoBtn" disabled>Undo Delete</button>
       </div>
 
@@ -122,14 +119,30 @@
   </main>
 </div>
 
-<!-- MODAL -->
+<!-- ================= QUIZ MODAL ================= -->
 <div class="modal hidden" id="quizModal">
   <div class="modal-content">
-    <h3>Start Quiz</h3>
-    <div class="quiz-info"><span>Difficulty:</span> <strong id="modalDifficulty"></strong></div>
-    <div class="quiz-info"><span>Total Questions:</span> <strong id="modalQuestions"></strong></div>
-    <div class="quiz-info"><span>Time:</span> <strong id="modalTime"></strong></div>
-    <div class="quiz-info"><span>Last Score:</span> <strong id="modalLastScore"></strong></div>
+    <h3>🚀 Start Quiz</h3>
+
+    <div class="quiz-info">
+      <span>Difficulty:</span>
+      <strong id="modalDifficulty"></strong>
+    </div>
+
+    <div class="quiz-info">
+      <span>Total Questions:</span>
+      <strong id="modalQuestions"></strong>
+    </div>
+
+    <div class="quiz-info">
+      <span>Time:</span>
+      <strong id="modalTime"></strong>
+    </div>
+
+    <div class="quiz-info">
+      <span>Last Score:</span>
+      <strong id="modalLastScore"></strong>
+    </div>
 
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
