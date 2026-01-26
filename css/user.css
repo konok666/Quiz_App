@@ -8,14 +8,14 @@
 
 html,
 body {
-  max-width: 100%;
-  overflow-x: hidden; /* ✅ ADDED: prevents page floating */
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 body {
   background: #f4f6fb;
   color: #1f2937;
-  overflow-x: hidden;
 }
 
 /* ================= MOBILE HEADER ================= */
@@ -26,14 +26,17 @@ body {
   background: #0f172a;
   color: #ffffff;
   padding: 14px 18px;
-
-  /* ✅ ADDED */
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 56px;
   z-index: 2000;
+}
+
+.mobile-header h3 {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .mobile-header button {
@@ -59,21 +62,11 @@ body {
   display: flex;
   flex-direction: column;
   position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1500;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
-  transition: left 0.3s ease;
-}
-
-.sidebar-close {
-  display: none;
-  align-self: flex-end;
-  background: none;
-  border: none;
-  font-size: 22px;
-  color: #ffffff;
-  cursor: pointer;
-  margin-bottom: 12px;
 }
 
 /* LOGO */
@@ -129,6 +122,7 @@ body {
   flex: 1;
   padding: 28px 32px;
   margin-left: 260px;
+  overflow-y: auto;
 }
 
 .section h2 {
@@ -137,29 +131,28 @@ body {
   font-weight: 700;
 }
 
-/* ================= PROFILE & QUIZ CARDS ================= */
-#profile .card,
-#quiz .card {
+/* ================= CARDS & STATS ================= */
+.card,
+.stat-box,
+.quiz-intro {
   background: #ffffff;
   padding: 22px 24px;
   border-radius: 18px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  max-width: 420px;
 }
 
-/* ================= STATS ================= */
+.card {
+  max-width: 420px;
+  margin-bottom: 20px;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
-  margin-top: 25px;
 }
 
 .stat-box {
-  background: #ffffff;
-  padding: 22px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   transition: transform 0.25s ease;
 }
 
@@ -173,25 +166,7 @@ body {
   color: #2563eb;
 }
 
-.stat-box p {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-/* ================= QUIZ ================= */
-#quiz .quiz-intro {
-  background: #ffffff;
-  padding: 22px 24px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  margin-bottom: 25px;
-  line-height: 1.6;
-}
-
-#quiz .quiz-intro strong {
-  color: #2563eb;
-}
-
+/* ================= DIFFICULTY ================= */
 .difficulty-box {
   display: flex;
   gap: 20px;
@@ -207,12 +182,14 @@ body {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
+/* Sidebar-like hover */
 .difficulty-box button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  transform: translateX(6px) translateY(-2px);
+  filter: brightness(1.1);
 }
 
 .easy {
@@ -230,57 +207,15 @@ body {
   color: #ffffff;
 }
 
-/* ================= HISTORY ================= */
-#history .history-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-#history select,
-#history input {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-}
-
-#history button {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-  background: #ef4444;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-#history button:disabled {
-  background: #9ca3af;
-}
-
-#history .table-wrap {
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  overflow-x: auto; /* ✅ ADDED */
-  width: 100%;
-}
-
-#history table {
-  width: 100%;
-  min-width: 650px; /* ✅ ADDED: prevents mobile break */
-  border-collapse: collapse;
-}
-
-#history th {
-  background: #f1f5f9;
-  padding: 14px;
-}
-
-#history td {
-  padding: 14px;
-  border-top: 1px solid #e5e7eb;
-  text-align: center;
+/* ================= OVERLAY (SIDEBAR ONLY) ================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1400;
 }
 
 /* ================= MODAL ================= */
@@ -298,56 +233,211 @@ body {
   display: flex;
 }
 
-.modal-content {
-  background: #ffffff;
-  width: 90%;
-  max-width: 420px;
-  padding: 26px 28px;
-  border-radius: 22px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
-  animation: modalPop 0.25s ease;
-}
-
 /* ================= UTIL ================= */
 .hidden {
   display: none;
 }
 
-/* ================= ANIMATION ================= */
-@keyframes modalPop {
-  from {
-    transform: scale(0.92);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* ================= RESPONSIVE ================= */
+/* ================= MOBILE PUSH SIDEBAR ================= */
 @media (max-width: 768px) {
   .mobile-header {
     display: flex;
   }
 
   .sidebar {
-    left: -260px;
-  }
-
-  .sidebar.show {
-    left: 0;
-  }
-
-  .sidebar-close {
-    display: block;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
 
   .content {
     margin-left: 0;
     padding: 18px;
-
-    /* ✅ ADDED: space for fixed header */
     margin-top: 56px;
+    transition: transform 0.3s ease;
+  }
+
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  body.sidebar-open .content {
+    transform: translateX(260px);
+  }
+
+  body.sidebar-open .overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* ================= HISTORY PAGE ================= */
+.history-controls {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.history-controls select,
+.history-controls input,
+.history-controls button {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.history-controls button {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+}
+
+.history-controls button:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+}
+
+.history-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.history-table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+}
+
+.history-table thead {
+  background: #2563eb;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.history-table th,
+.history-table td {
+  padding: 14px 16px;
+  text-align: center;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.history-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.history-table tbody tr:hover {
+  background: #eef2ff;
+}
+
+/* Difficulty visibility improved */
+.diff {
+  text-transform: capitalize;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.diff.easy { color: #15803d; }
+.diff.medium { color: #a16207; }
+.diff.hard { color: #b91c1c; }
+
+.delete-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ef4444;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.history-table .empty {
+  padding: 30px;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ================= QUIZ MODAL CONTENT ================= */
+.modal-content {
+  background: #ffffff;
+  padding: 26px 28px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  animation: modalPop 0.25s ease;
+}
+
+.modal-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.quiz-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.btn-cancel:hover {
+  background: #d1d5db;
+}
+
+.btn-start {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-start:hover {
+  background: #1d4ed8;
+}
+
+@keyframes modalPop {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }

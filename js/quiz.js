@@ -176,15 +176,18 @@ function showResult() {
   };
 }
 
-/* ================= SAVE HISTORY ================= */
+/* ================= SAVE HISTORY (FIXED) ================= */
 function saveQuizHistory() {
   const difficulty = localStorage.getItem("quizDifficulty");
+  const now = new Date();
 
   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+
   history.push({
-    difficulty,
-    score,
-    date: new Date().toLocaleString()
+    difficulty: difficulty,
+    score: `${score}/${questionsList.length}`,
+    date: now.toLocaleDateString(),   // ✅ Date
+    time: now.toLocaleTimeString()    // ✅ Time
   });
 
   localStorage.setItem("quizHistory", JSON.stringify(history));
@@ -192,6 +195,8 @@ function saveQuizHistory() {
   const lastScores = JSON.parse(localStorage.getItem("lastScores")) || {};
   lastScores[difficulty] = score;
   localStorage.setItem("lastScores", JSON.stringify(lastScores));
+
+  localStorage.removeItem("quizDifficulty");
 }
 
 /* ================= START QUIZ ================= */
