@@ -51,7 +51,7 @@ function initQuiz() {
 
   questionsList = allQuestions.filter(q => q.difficulty === difficulty);
 
-  if (questionsList.length === 0) {
+  if (!questionsList.length) {
     alert(`No ${difficulty} questions available.`);
     window.location.href = "user.html";
     return;
@@ -64,6 +64,9 @@ function initQuiz() {
   score = 0;
   scoreEl.innerText = `Score: ${score}`;
 
+  submitBtn.style.display = "none";
+  nextBtn.style.display = "inline-block";
+
   loadQuestion();
 }
 
@@ -74,6 +77,7 @@ function loadQuestion() {
   feedbackEl.innerText = "";
   answersEl.innerHTML = "";
   nextBtn.disabled = true;
+  submitBtn.disabled = true;
 
   const q = questionsList[currentQuestionIndex];
 
@@ -86,19 +90,24 @@ function loadQuestion() {
   progressBar.style.width =
     `${((currentQuestionIndex + 1) / questionsList.length) * 100}%`;
 
+  const optionLabels = ["A", "B", "C", "D"];
   q.options.forEach((option, index) => {
     const btn = document.createElement("button");
-    btn.innerText = option;
+    btn.innerHTML = `<span class="opt-label">${optionLabels[index]}</span>${option}`;
     btn.onclick = () => checkAnswer(index);
     answersEl.appendChild(btn);
   });
 
   startTimer(q.difficulty);
 
-  nextBtn.innerText =
-    currentQuestionIndex === questionsList.length - 1
-      ? "Submit Quiz"
-      : "Next";
+  // 🔹 BUTTON VISIBILITY LOGIC
+  if (currentQuestionIndex === questionsList.length - 1) {
+    nextBtn.style.display = "none";
+    submitBtn.style.display = "inline-block";
+  } else {
+    nextBtn.style.display = "inline-block";
+    submitBtn.style.display = "none";
+  }
 }
 
 /* ================= TIMER ================= */
@@ -115,6 +124,7 @@ function startTimer(level) {
       feedbackEl.innerText = "⏰ Time's up!";
       disableButtons();
       nextBtn.disabled = false;
+      submitBtn.disabled = false;
     }
   }, 1000);
 }
@@ -129,34 +139,34 @@ function checkAnswer(selectedIndex) {
   buttons.forEach((btn, i) => {
     btn.disabled = true;
     if (i === q.answer) btn.classList.add("correct");
-    if (i === selectedIndex && selectedIndex !== q.answer)
-      btn.classList.add("wrong");
+    if (i === selectedIndex && i !== q.answer) btn.classList.add("wrong");
   });
 
   if (selectedIndex === q.answer) score++;
 
   scoreEl.innerText = `Score: ${score}`;
+
   nextBtn.disabled = false;
+  submitBtn.disabled = false;
 }
 
 /* ================= DISABLE OPTIONS ================= */
 function disableButtons() {
-  document
-    .querySelectorAll(".answers button")
-    .forEach(btn => (btn.disabled = true));
+  document.querySelectorAll(".answers button").forEach(btn => btn.disabled = true);
 }
 
-/* ================= NEXT / SUBMIT ================= */
+/* ================= NEXT ================= */
 nextBtn.addEventListener("click", () => {
-  if (currentQuestionIndex === questionsList.length - 1) {
-    showResult();
-  } else {
-    currentQuestionIndex++;
-    loadQuestion();
-  }
+  currentQuestionIndex++;
+  loadQuestion();
 });
 
-/* ================= RESULT ================= */
+/* ================= SUBMIT (LAST QUESTION ONLY) ================= */
+submitBtn.addEventListener("click", () => {
+  showResult();
+});
+
+/* ================= RESULT / SUMMARY ================= */
 function showResult() {
   clearInterval(timer);
 
@@ -165,28 +175,50 @@ function showResult() {
 
   questionEl.innerText = "🎉 Quiz Completed!";
   answersEl.innerHTML = "";
-  feedbackEl.innerHTML = `Final Score: ${score}/${questionsList.length}`;
 
+  feedbackEl.innerHTML = `<strong>Final Score:</strong> ${score}/${questionsList.length}`;
+
+  // Hide Next and Submit buttons
   nextBtn.style.display = "none";
-  submitBtn.style.display = "inline-block";
+  submitBtn.style.display = "none";
 
-  submitBtn.onclick = () => {
-    saveQuizHistory();
-    window.location.href = "user.html";
-  };
+  // Show Restart button inside footer
+  let restartBtn = document.getElementById("restartBtn");
+  if (!restartBtn) {
+    restartBtn = document.createElement("button");
+    restartBtn.id = "restartBtn";
+    restartBtn.innerText = "Restart Quiz";
+    restartBtn.onclick = restartQuiz;
+    document.querySelector(".quiz-footer").appendChild(restartBtn);
+  } else {
+    restartBtn.style.display = "inline-block";
+  }
+
+  saveQuizHistory();
 }
 
-/* ================= SAVE HISTORY (FINAL & CORRECT) ================= */
+/* ================= RESTART (RESULT ONLY) ================= */
+function restartQuiz() {
+  clearInterval(timer);
+  currentQuestionIndex = 0;
+  score = 0;
+
+  questionSerialEl.style.display = "inline";
+  timerEl.style.display = "inline";
+
+  initQuiz();
+}
+
+/* ================= SAVE HISTORY ================= */
 function saveQuizHistory() {
   const difficulty = localStorage.getItem("quizDifficulty");
   const now = new Date();
 
   const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-
   history.push({
-    difficulty: difficulty,
-    score: score,                 // ✅ numeric
-    total: questionsList.length,  // ✅ numeric
+    difficulty,
+    score,
+    total: questionsList.length,
     date: now.toLocaleDateString(),
     time: now.toLocaleTimeString()
   });
@@ -205,12 +237,10 @@ document.addEventListener("visibilitychange", () => {
     tabSwitchCount++;
 
     if (tabSwitchCount <= maxWarnings) {
-      alert(
-        `⚠ Warning!\n\nYou switched tabs ${tabSwitchCount} time(s).\nStay on the quiz page.`
-      );
+      alert(`⚠ Warning!\nTab switch ${tabSwitchCount}/${maxWarnings}`);
     } else {
       quizSubmitted = true;
-      alert("⚠ Too many tab switches!\nQuiz will be auto-submitted.");
+      alert("⚠ Too many tab switches! Quiz submitted.");
       showResult();
     }
   }

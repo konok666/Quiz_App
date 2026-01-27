@@ -5,8 +5,9 @@
   <title>Quiz | Quiz System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Common CSS -->
-  <link rel="stylesheet" href="../css/style.css" />
+  <!-- Main CSS -->
+  <!-- <link rel="stylesheet" href="../css/style.css" /> -->
+  <link rel="stylesheet" href="../css/quiz.css" />
 </head>
 
 <body>
@@ -28,8 +29,8 @@
     <!-- ANSWERS -->
     <div id="answers" class="answers"></div>
 
-    <!-- FEEDBACK -->
-    <p id="feedback"></p>
+    <!-- FEEDBACK / RESULT -->
+    <p id="feedback" class="feedback"></p>
 
     <!-- PROGRESS -->
     <div class="progress">
@@ -40,7 +41,11 @@
     <!-- FOOTER -->
     <div class="quiz-footer">
       <span id="score">Score: 0</span>
+
+      <!-- Next button (NOT last question) -->
       <button id="nextBtn" disabled>Next</button>
+
+      <!-- Submit button (ONLY last question) -->
       <button id="submitBtn" style="display:none;">Submit Quiz</button>
     </div>
 
