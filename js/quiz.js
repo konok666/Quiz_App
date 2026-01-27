@@ -176,7 +176,7 @@ function showResult() {
   };
 }
 
-/* ================= SAVE HISTORY (FIXED) ================= */
+/* ================= SAVE HISTORY (FINAL & CORRECT) ================= */
 function saveQuizHistory() {
   const difficulty = localStorage.getItem("quizDifficulty");
   const now = new Date();
@@ -185,19 +185,36 @@ function saveQuizHistory() {
 
   history.push({
     difficulty: difficulty,
-    score: `${score}/${questionsList.length}`,
-    date: now.toLocaleDateString(),   // ✅ Date
-    time: now.toLocaleTimeString()    // ✅ Time
+    score: score,                 // ✅ numeric
+    total: questionsList.length,  // ✅ numeric
+    date: now.toLocaleDateString(),
+    time: now.toLocaleTimeString()
   });
 
   localStorage.setItem("quizHistory", JSON.stringify(history));
-
-  const lastScores = JSON.parse(localStorage.getItem("lastScores")) || {};
-  lastScores[difficulty] = score;
-  localStorage.setItem("lastScores", JSON.stringify(lastScores));
-
   localStorage.removeItem("quizDifficulty");
 }
+
+/* ================= TAB SWITCH WARNING ================= */
+let tabSwitchCount = 0;
+const maxWarnings = 3;
+let quizSubmitted = false;
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && !quizSubmitted) {
+    tabSwitchCount++;
+
+    if (tabSwitchCount <= maxWarnings) {
+      alert(
+        `⚠ Warning!\n\nYou switched tabs ${tabSwitchCount} time(s).\nStay on the quiz page.`
+      );
+    } else {
+      quizSubmitted = true;
+      alert("⚠ Too many tab switches!\nQuiz will be auto-submitted.");
+      showResult();
+    }
+  }
+});
 
 /* ================= START QUIZ ================= */
 window.onload = initQuiz;

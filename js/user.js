@@ -209,12 +209,28 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ========= STATS ========= */
   function loadStats() {
     const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-    ["easy","medium","hard"].forEach(level => {
+
+    ["easy", "medium", "hard"].forEach(level => {
       const data = history.filter(h => h.difficulty === level);
-      const total = data.reduce((s,h) => s + h.score,0);
-      document.getElementById(`${level}Attempts`).textContent = data.length;
-      document.getElementById(`${level}Best`).textContent = data.length ? Math.max(...data.map(h=>h.score)) : 0;
-      document.getElementById(`${level}Avg`).textContent = data.length ? (total/data.length).toFixed(2) : 0;
+
+      // normalize scores → always numbers
+      const scores = data.map(h => {
+        if (typeof h.score === "number") return h.score;
+        if (typeof h.score === "string" && h.score.includes("/")) {
+          return Number(h.score.split("/")[0]);
+        }
+        return 0;
+      });
+
+      const attempts = scores.length;
+      const best = attempts ? Math.max(...scores) : 0;
+      const avg = attempts
+        ? (scores.reduce((a, b) => a + b, 0) / attempts).toFixed(2)
+        : 0;
+
+      document.getElementById(`${level}Attempts`).textContent = attempts;
+      document.getElementById(`${level}Best`).textContent = best;
+      document.getElementById(`${level}Avg`).textContent = avg;
     });
   }
 
