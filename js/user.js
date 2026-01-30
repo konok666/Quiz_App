@@ -98,8 +98,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // -------- LOGOUT BUTTON FIX --------
   document.querySelector(".menu .danger").addEventListener("click", () => {
-    localStorage.clear();
+    // Only clear user-specific keys, not questions or default admin
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("role");
+    localStorage.removeItem("activeSection");
     window.location.href = "login.html";
   });
 
@@ -127,10 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   modalContent.addEventListener("click", e => e.stopPropagation());
-
-  // quizModal.addEventListener("click", () => {
-  //   closeModal();
-  // });
 
   window.startQuiz = () => {
     localStorage.setItem("quizDifficulty", selectedDifficulty);
@@ -162,9 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const dt = new Date(h.datetime);
         dateText = dt.toLocaleDateString();
         timeText = dt.toLocaleTimeString();
-      } else if (h.date && h.time) {
-        dateText = h.date;
-        timeText = h.time;
       }
 
       const row = document.createElement("tr");
@@ -213,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ["easy", "medium", "hard"].forEach(level => {
       const data = history.filter(h => h.difficulty === level);
 
-      // normalize scores → always numbers
       const scores = data.map(h => {
         if (typeof h.score === "number") return h.score;
         if (typeof h.score === "string" && h.score.includes("/")) {

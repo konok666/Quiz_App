@@ -46,27 +46,12 @@
     <h2>User Login</h2>
 
     <form id="loginForm">
-      <input
-        type="email"
-        id="email"
-        placeholder="Enter Email"
-        required
-      />
+      <input type="email" id="email" placeholder="Enter Email" required />
 
       <!-- PASSWORD WITH EYE ICON -->
       <div class="password-wrapper">
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter Password"
-          minlength="6"
-          required
-        />
-        <i
-          class="fa-solid fa-eye toggle-password"
-          id="togglePassword"
-          onclick="togglePassword()"
-        ></i>
+        <input type="password" id="password" placeholder="Enter Password" minlength="6" required />
+        <i class="fa-solid fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
       </div>
 
       <button type="submit">Login</button>
@@ -87,25 +72,6 @@
 
   <!-- JS files -->
   <script src="../js/storage.js"></script>
-  <script src="../js/auth.js"></script>
-
-  <!-- SHOW / HIDE PASSWORD -->
-  <script>
-    function togglePassword() {
-      const passwordInput = document.getElementById("password");
-      const icon = document.getElementById("togglePassword");
-
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        icon.classList.remove("fa-eye");
-        icon.classList.add("fa-eye-slash");
-      } else {
-        passwordInput.type = "password";
-        icon.classList.remove("fa-eye-slash");
-        icon.classList.add("fa-eye");
-      }
-    }
-  </script>
-
+  <script src="../js/login.js"></script>
 </body>
 </html>

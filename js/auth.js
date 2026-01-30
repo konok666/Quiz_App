@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value.trim();
 
       const users = getUsers();
 
-      const userExists = users.find(u => u.email === email);
+      const userExists = users.find(u => u.email.toLowerCase() === email);
       if (userExists) {
         showError("Email already registered!");
         return;
@@ -46,11 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loginForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const email = document.getElementById("email").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value.trim();
 
-      const users = getUsers();
-      const user = users.find(u => u.email === email && u.password === password);
+      const users = getUsers(); // ✅ MISSING LINE (FIX)
+
+      const user = users.find(
+        u => u.email.toLowerCase() === email && u.password === password
+      );
 
       if (!user) {
         showError("Invalid email or password!");
