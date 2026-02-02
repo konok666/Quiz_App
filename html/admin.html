@@ -1,135 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/admin.css">
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard | Quiz App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../css/admin.css" />
 </head>
 <body>
 
-<!-- 🔔 WELCOME TOAST -->
+<!-- ================= TOAST ================= -->
 <div id="welcomeToast" class="toast hidden">
   <span id="toastGreeting"></span>
 </div>
 
-<!-- MOBILE HEADER -->
+<!-- ================= MOBILE HEADER ================= -->
 <header class="mobile-header">
   <button id="menuToggle">☰</button>
-  <span>Quiz Admin</span>
+  <h3>Quiz Admin</h3>
 </header>
 
-<div class="admin-layout">
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar">
+  <h2 class="logo">Quiz Admin</h2>
+  <ul class="menu">
+    <li data-page="dashboardWelcome" class="menu-item active">📊 Dashboard</li>
+    <li data-page="users" class="menu-item">👤 Users</li>
+    <li data-page="questions" class="menu-item">❓ Questions</li>
+    <li data-page="addQuestion" class="menu-item">➕ Add Question</li>
+    <li id="logoutBtn" class="menu-item danger">🚪 Logout</li>
+  </ul>
+</aside>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <h2 class="logo">Quiz Admin</h2>
-    <ul class="menu">
-      <li data-page="users" class="menu-item active">👤 Users</li>
-      <li data-page="questions" class="menu-item">❓ Questions</li>
-      <li data-page="addQuestion" class="menu-item">➕ Add Question</li>
-      <li id="logoutBtn" class="menu-item danger">🚪 Logout</li>
-    </ul>
-  </aside>
+<!-- ================= OVERLAY ================= -->
+<div class="overlay"></div>
 
-  <!-- MAIN CONTENT -->
-  <main class="content">
+<!-- ================= MAIN CONTENT ================= -->
+<main class="content">
 
-    <!-- 📊 DASHBOARD -->
-    <section id="dashboardWelcome" class="section">
-      <h2 class="page-title">📊 Dashboard Overview</h2>
-      <div class="dashboard-cards">
-        <div class="dash-card"><h4>Total Users</h4><p id="dashUsers">0</p></div>
-        <div class="dash-card"><h4>Total Questions</h4><p id="dashQuestions">0</p></div>
-        <div class="dash-card easy"><h4>Easy</h4><p id="dashEasy">0</p></div>
-        <div class="dash-card medium"><h4>Medium</h4><p id="dashMedium">0</p></div>
-        <div class="dash-card hard"><h4>Hard</h4><p id="dashHard">0</p></div>
+  <!-- ===== DASHBOARD ===== -->
+  <section id="dashboardWelcome" class="section">
+    <h2 class="page-title">📊 Dashboard Overview</h2>
+
+    <div class="dashboard-cards">
+      <div class="dash-card">
+        <h4>Total Users</h4>
+        <p id="dashUsers">0</p>
       </div>
-    </section>
-
-    <!-- 👥 USERS -->
-    <section id="users" class="section hidden">
-      <div class="section-header">
-        <h2 class="page-title">👥 Users</h2>
-        <p>Total Users: <span id="userCount">0</span></p>
+      <div class="dash-card">
+        <h4>Total Questions</h4>
+        <p id="dashQuestions">0</p>
       </div>
-      <ul id="usersList" class="users-list"></ul>
-    </section>
+      <div class="dash-card">
+        <h4>Easy</h4>
+        <p id="dashEasy">0</p>
+      </div>
+      <div class="dash-card">
+        <h4>Medium</h4>
+        <p id="dashMedium">0</p>
+      </div>
+      <div class="dash-card">
+        <h4>Hard</h4>
+        <p id="dashHard">0</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- ❓ QUESTIONS -->
-    <section id="questions" class="section hidden">
-      <div class="section-header">
-        <h2 class="page-title">❓ Questions</h2>
+  <!-- ===== USERS ===== -->
+  <section id="users" class="section hidden">
+    <div class="section-header">
+      <h2 class="page-title">👥 Users</h2>
+      <p>Total Users: <span id="userCount">0</span></p>
+    </div>
+
+    <ul id="usersList" class="users-list"></ul>
+  </section>
+
+  <!-- ===== QUESTIONS ===== -->
+  <section id="questions" class="section hidden">
+    <h2 class="page-title">❓ Questions</h2>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+
+      <!-- SEARCH BOX -->
+      <div class="search-box">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search questions..."
+          autocomplete="off"
+        />
+
+        <button id="clearSearch" class="clear-btn hidden">✕</button>
+
+        <ul id="searchSuggestions" class="suggestions hidden"></ul>
       </div>
 
-      <div class="filter-bar">
-        <input id="searchInput" placeholder="Search questions">
-        <select id="difficultyFilter">
-          <option value="">All</option>
+      <!-- DIFFICULTY -->
+      <select id="difficultyFilter">
+        <option value="">All</option>
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+
+      <!-- CLEAR -->
+      <button id="clearQuestionsBtn" class="btn-danger">
+        🗑 Clear All
+      </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <p>Easy <span id="easyCount">0</span></p>
+      <p>Medium <span id="mediumCount">0</span></p>
+      <p>Hard <span id="hardCount">0</span></p>
+    </div>
+
+    <ul id="questionsList" class="questions-list"></ul>
+  </section>
+
+  <!-- ===== ADD QUESTION ===== -->
+  <section id="addQuestion" class="section hidden">
+    <h2 class="page-title">➕ Add / Edit Question</h2>
+
+    <form id="questionForm" class="question-form">
+      <input type="hidden" id="questionId" />
+
+      <input
+        id="questionText"
+        placeholder="Enter question"
+        required
+      />
+
+      <div class="options">
+        <input id="option0" placeholder="Option 1" />
+        <input id="option1" placeholder="Option 2" />
+        <input id="option2" placeholder="Option 3" />
+        <input id="option3" placeholder="Option 4" />
+      </div>
+
+      <div class="row">
+        <select id="correctAnswer">
+          <option value="">Correct Answer</option>
+          <option value="0">Option 1</option>
+          <option value="1">Option 2</option>
+          <option value="2">Option 3</option>
+          <option value="3">Option 4</option>
+        </select>
+
+        <select id="difficulty">
+          <option value="">Difficulty</option>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <button id="clearQuestionsBtn" class="btn-danger">🗑 Clear All Questions</button>
       </div>
 
-      <div class="stats">
-        <p>Easy <span id="easyCount">0</span></p>
-        <p>Medium <span id="mediumCount">0</span></p>
-        <p>Hard <span id="hardCount">0</span></p>
-      </div>
+      <button type="submit" class="btn-primary">
+        Save Question
+      </button>
 
-      <ul id="questionsList" class="questions-list"></ul>
-    </section>
+      <p id="adminError" class="error"></p>
+      <p id="adminSuccess" class="success"></p>
+    </form>
+  </section>
 
-    <!-- ➕ ADD / EDIT QUESTION -->
-    <section id="addQuestion" class="section hidden">
-      <div class="section-header">
-        <h2 class="page-title">➕ Add / Edit Question</h2>
-      </div>
+</main>
 
-      <form id="questionForm" class="question-form">
-        <input type="hidden" id="questionId">
-
-        <div class="form-group">
-          <input id="questionText" placeholder="Question" required>
-        </div>
-
-        <div class="form-group">
-          <input id="option0" placeholder="Option 1">
-          <input id="option1" placeholder="Option 2">
-          <input id="option2" placeholder="Option 3">
-          <input id="option3" placeholder="Option 4">
-        </div>
-
-        <div class="form-group row">
-          <select id="correctAnswer">
-            <option value="">Correct Answer</option>
-            <option value="0">Option 1</option>
-            <option value="1">Option 2</option>
-            <option value="2">Option 3</option>
-            <option value="3">Option 4</option>
-          </select>
-
-          <select id="difficulty">
-            <option value="">Difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-
-        <button class="btn-primary">Save Question</button>
-        <p id="adminError" class="error"></p>
-        <p id="adminSuccess" class="success"></p>
-      </form>
-    </section>
-
-  </main>
-
-</div>
-
+<!-- ================= SCRIPTS ================= -->
 <script src="../js/storage.js"></script>
 <script src="../js/admin.js"></script>
+
 </body>
 </html>
