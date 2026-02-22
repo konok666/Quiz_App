@@ -13,6 +13,7 @@ body {
   color: #1f2937;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .hidden {
@@ -31,6 +32,7 @@ body {
   inset: 0 0 auto 0;
   height: 56px;
   z-index: 3000;
+  transition: background 0.3s ease;
 }
 
 #menuToggle {
@@ -39,6 +41,11 @@ body {
   font-size: 22px;
   color: #ffffff;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+#menuToggle:hover {
+  transform: scale(1.1);
 }
 
 /* ================= SIDEBAR ================= */
@@ -54,7 +61,11 @@ body {
   height: 100vh;
   z-index: 2500;
   box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar:hover {
+  box-shadow: 6px 0 24px rgba(0,0,0,0.18);
 }
 
 .logo {
@@ -77,19 +88,19 @@ body {
   cursor: pointer;
   font-weight: 500;
   color: #cbd5f5;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
 }
 
 .menu li:hover {
   background: rgba(255,255,255,0.08);
   color: #ffffff;
-  transform: translateX(4px);
+  transform: translateX(6px) scale(1.02);
 }
 
 .menu li.active {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+  box-shadow: 0 6px 14px rgba(37,99,235,0.4);
 }
 
 .menu li.danger {
@@ -110,7 +121,7 @@ body {
   background: rgba(0,0,0,0.4);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   z-index: 2000;
 }
 
@@ -147,6 +158,7 @@ body.sidebar-open .main-content {
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  color: #111827;
 }
 
 /* ================= DASHBOARD CARDS ================= */
@@ -163,12 +175,12 @@ body.sidebar-open .main-content {
   border-radius: 14px;
   text-align: center;
   box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
 }
 
 .dash-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.12);
 }
 
 .dash-card h4 {
@@ -200,20 +212,15 @@ body.sidebar-open .main-content {
   margin-bottom: 18px;
 }
 
-.filter-bar input {
-  flex: 2;
-  min-width: 180px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
+.filter-bar input,
+.filter-bar select {
+  transition: all 0.3s ease;
 }
 
-.filter-bar select {
-  flex: 1;
-  min-width: 140px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+.filter-bar input:focus,
+.filter-bar select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
 }
 
 /* ================= SEARCH BOX ================= */
@@ -228,6 +235,12 @@ body.sidebar-open .main-content {
   padding: 10px 38px 10px 12px;
   border-radius: 10px;
   border: 1px solid #d1d5db;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }
 
 .clear-btn {
@@ -240,6 +253,7 @@ body.sidebar-open .main-content {
   font-size: 18px;
   cursor: pointer;
   color: #6b7280;
+  transition: color 0.3s ease;
 }
 
 .clear-btn:hover {
@@ -257,11 +271,20 @@ body.sidebar-open .main-content {
   list-style: none;
   overflow: hidden;
   z-index: 3000;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: all 0.3s ease;
+}
+
+.suggestions.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .suggestions li {
   padding: 10px 14px;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .suggestions li:hover {
@@ -274,6 +297,12 @@ body.sidebar-open .main-content {
   padding: 16px;
   border-radius: 14px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
 .question-top {
@@ -305,6 +334,12 @@ button {
   padding: 8px 14px;
   cursor: pointer;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
 .btn-primary { background: #4f46e5; color: #fff; }
@@ -318,6 +353,13 @@ select {
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }
 
 .options {
@@ -329,33 +371,6 @@ select {
 .row {
   display: flex;
   gap: 12px;
-}
-
-/* ================= USER PROFILE ================= */
-.profile-card {
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
-  max-width: 520px;
-}
-
-.profile-card h3 {
-  margin-bottom: 12px;
-}
-
-.profile-card p {
-  margin-bottom: 8px;
-  color: #374151;
-}
-
-/* ================= EDIT PROFILE ================= */
-.edit-profile {
-  max-width: 520px;
-}
-
-.edit-profile button {
-  margin-top: 12px;
 }
 
 /* ================= TOAST ================= */
@@ -371,13 +386,139 @@ select {
   box-shadow: 0 10px 26px rgba(0,0,0,0.15);
   opacity: 0;
   transform: translateY(-20px);
-  transition: 0.4s;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   z-index: 4000;
 }
 
 .toast.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ================= TOAST UNDO BUTTON ================= */
+.toast-undo {
+  margin-left: 12px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.toast-undo:hover {
+  background: rgba(255,255,255,0.35);
+  transform: scale(1.05);
+}
+
+/* ================= CONFIRM MODAL ================= */
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.confirm-modal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.confirm-box {
+  background: #ffffff;
+  padding: 28px 24px;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.2);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.confirm-modal.show .confirm-box {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.confirm-box h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.confirm-box p {
+  margin-bottom: 20px;
+  color: #374151;
+}
+
+.confirm-box input[type="password"] {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* ================= CONFIRM ACTIONS ================= */
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.confirm-actions .btn-secondary {
+  background: #6b7280;
+  color: #fff;
+}
+
+.confirm-actions .btn-danger {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ================= STATS BOXES ================= */
+.stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.stats p {
+  background: #f3f4f6;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+}
+
+/* ================= DASHBOARD CARD COLORS ================= */
+.dash-card:nth-child(1) { border-top: 4px solid #2563eb; }
+.dash-card:nth-child(2) { border-top: 4px solid #16a34a; }
+.dash-card:nth-child(3) { border-top: 4px solid #facc15; }
+.dash-card:nth-child(4) { border-top: 4px solid #f97316; }
+.dash-card:nth-child(5) { border-top: 4px solid #dc2626; }
+
+/* ================= SMALL ADJUSTMENTS ================= */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.question-options {
+  word-break: break-word;
 }
 
 /* ================= MOBILE PUSH SIDEBAR ================= */
@@ -397,5 +538,99 @@ select {
   body.sidebar-open .content,
   body.sidebar-open .main-content {
     transform: translateX(260px);
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-card {
+    flex: 1 1 100%;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
+   ADD / EDIT QUESTION PAGE – SAFE PROFESSIONAL STYLING
+   Scoped strictly to #addQuestion
+===================================================== */
+
+#addQuestion .question-form {
+  max-width: 720px;
+  background: #ffffff;
+  padding: 24px 26px;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Question text */
+#addQuestion #questionText {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+/* Options grid */
+#addQuestion .options {
+  margin-bottom: 16px;
+}
+
+#addQuestion .options input {
+  background: #f9fafb;
+}
+
+/* Row selects */
+#addQuestion .row {
+  margin-bottom: 18px;
+}
+
+#addQuestion select {
+  background: #f9fafb;
+  font-weight: 500;
+}
+
+/* Save button */
+#addQuestion .btn-primary {
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+#addQuestion .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.45);
+}
+
+/* Messages */
+#addQuestion .error {
+  margin-top: 10px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+#addQuestion .success {
+  margin-top: 10px;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+/* Hover polish */
+#addQuestion input:hover,
+#addQuestion select:hover {
+  border-color: #94a3b8;
+}
+
+/* Mobile safety */
+@media (max-width: 480px) {
+  #addQuestion .question-form {
+    padding: 20px;
   }
 }

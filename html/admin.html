@@ -8,9 +8,15 @@
 </head>
 <body>
 
-<!-- ================= TOAST ================= -->
+<!-- ================= TOAST (WELCOME / SUCCESS) ================= -->
 <div id="welcomeToast" class="toast hidden">
   <span id="toastGreeting"></span>
+</div>
+
+<!-- ================= SUCCESS + UNDO TOAST ================= -->
+<div id="successToast" class="toast hidden">
+  <span id="toastMsg"></span>
+  <button id="undoBtn" class="toast-undo">Undo</button>
 </div>
 
 <!-- ================= MOBILE HEADER ================= -->
@@ -71,7 +77,6 @@
       <h2 class="page-title">👥 Users</h2>
       <p>Total Users: <span id="userCount">0</span></p>
     </div>
-
     <ul id="usersList" class="users-list"></ul>
   </section>
 
@@ -79,24 +84,13 @@
   <section id="questions" class="section hidden">
     <h2 class="page-title">❓ Questions</h2>
 
-    <!-- FILTER BAR -->
     <div class="filter-bar">
-
-      <!-- SEARCH BOX -->
       <div class="search-box">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search questions..."
-          autocomplete="off"
-        />
-
+        <input id="searchInput" placeholder="Search questions..." />
         <button id="clearSearch" class="clear-btn hidden">✕</button>
-
         <ul id="searchSuggestions" class="suggestions hidden"></ul>
       </div>
 
-      <!-- DIFFICULTY -->
       <select id="difficultyFilter">
         <option value="">All</option>
         <option value="easy">Easy</option>
@@ -104,13 +98,11 @@
         <option value="hard">Hard</option>
       </select>
 
-      <!-- CLEAR -->
       <button id="clearQuestionsBtn" class="btn-danger">
         🗑 Clear All
       </button>
     </div>
 
-    <!-- STATS -->
     <div class="stats">
       <p>Easy <span id="easyCount">0</span></p>
       <p>Medium <span id="mediumCount">0</span></p>
@@ -127,11 +119,7 @@
     <form id="questionForm" class="question-form">
       <input type="hidden" id="questionId" />
 
-      <input
-        id="questionText"
-        placeholder="Enter question"
-        required
-      />
+      <input id="questionText" placeholder="Enter question" required />
 
       <div class="options">
         <input id="option0" placeholder="Option 1" />
@@ -167,6 +155,27 @@
   </section>
 
 </main>
+
+<!-- ================= CONFIRM MODAL (DELETE / CLEAR ALL) ================= -->
+<div id="confirmModal" class="confirm-modal hidden">
+  <div class="confirm-box">
+    <h3 id="confirmTitle">Confirm Action</h3>
+    <p id="confirmMessage"></p>
+
+    <!-- ADMIN PASSWORD (ONLY FOR CLEAR ALL) -->
+    <input
+      type="password"
+      id="adminPassword"
+      class="hidden"
+      placeholder="Enter admin password"
+    />
+
+    <div class="confirm-actions">
+      <button id="confirmCancel" class="btn-secondary">Cancel</button>
+      <button id="confirmOk" class="btn-danger">Confirm</button>
+    </div>
+  </div>
+</div>
 
 <!-- ================= SCRIPTS ================= -->
 <script src="../js/storage.js"></script>
