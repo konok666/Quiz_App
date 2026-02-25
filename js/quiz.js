@@ -6,6 +6,13 @@ let score = 0;
 let timer;
 let timeLeft = 10;
 
+/* ================= WARNING SYSTEM ================= */
+
+let tabSwitchCount = Number(sessionStorage.getItem("tabSwitchCount")) || 0;
+let refreshCount = Number(sessionStorage.getItem("refreshCount")) || 0;
+const maxWarnings = 3;
+let quizSubmitted = false;
+
 /* ================= ACCESS PROTECTION ================= */
 (function checkAccess() {
   const role = localStorage.getItem("role");
@@ -39,8 +46,45 @@ const backBtn = document.getElementById("backBtn");
 /* ================= BACK BUTTON ================= */
 backBtn.addEventListener("click", () => {
   if (confirm("Quit quiz? Progress will be lost.")) {
+    sessionStorage.clear();
     localStorage.removeItem("quizDifficulty");
     window.location.href = "user.html";
+  }
+});
+
+/* ================= TAB SWITCH WARNING ================= */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && !quizSubmitted) {
+    tabSwitchCount++;
+    sessionStorage.setItem("tabSwitchCount", tabSwitchCount);
+
+    if (tabSwitchCount <= maxWarnings) {
+      alert(`⚠ Warning!\nTab switch ${tabSwitchCount}/${maxWarnings}`);
+    } else {
+      quizSubmitted = true;
+      alert("⚠ Too many tab switches! Quiz submitted.");
+      showResult();
+    }
+  }
+});
+
+/* ================= REFRESH WARNING ================= */
+window.addEventListener("load", () => {
+  const navEntries = performance.getEntriesByType("navigation");
+
+  if (navEntries.length > 0 && navEntries[0].type === "reload") {
+    if (!quizSubmitted) {
+      refreshCount++;
+      sessionStorage.setItem("refreshCount", refreshCount);
+
+      if (refreshCount <= maxWarnings) {
+        alert(`⚠ Warning!\nPage refresh ${refreshCount}/${maxWarnings}`);
+      } else {
+        quizSubmitted = true;
+        alert("⚠ Too many refresh attempts! Quiz submitted.");
+        showResult();
+      }
+    }
   }
 });
 
@@ -100,7 +144,6 @@ function loadQuestion() {
 
   startTimer(q.difficulty);
 
-  // 🔹 BUTTON VISIBILITY LOGIC
   if (currentQuestionIndex === questionsList.length - 1) {
     nextBtn.style.display = "none";
     submitBtn.style.display = "inline-block";
@@ -134,7 +177,7 @@ function checkAnswer(selectedIndex) {
   clearInterval(timer);
 
   const q = questionsList[currentQuestionIndex];
-  const buttons = document.querySelectorAll(".answers button");
+  const buttons = document.querySelectorAll("#answers button");
 
   buttons.forEach((btn, i) => {
     btn.disabled = true;
@@ -152,7 +195,7 @@ function checkAnswer(selectedIndex) {
 
 /* ================= DISABLE OPTIONS ================= */
 function disableButtons() {
-  document.querySelectorAll(".answers button").forEach(btn => btn.disabled = true);
+  document.querySelectorAll("#answers button").forEach(btn => btn.disabled = true);
 }
 
 /* ================= NEXT ================= */
@@ -161,14 +204,17 @@ nextBtn.addEventListener("click", () => {
   loadQuestion();
 });
 
-/* ================= SUBMIT (LAST QUESTION ONLY) ================= */
+/* ================= SUBMIT ================= */
 submitBtn.addEventListener("click", () => {
   showResult();
 });
 
-/* ================= RESULT / SUMMARY ================= */
+/* ================= RESULT ================= */
 function showResult() {
   clearInterval(timer);
+
+  quizSubmitted = true;
+  sessionStorage.clear();
 
   questionSerialEl.style.display = "none";
   timerEl.style.display = "none";
@@ -178,11 +224,9 @@ function showResult() {
 
   feedbackEl.innerHTML = `<strong>Final Score:</strong> ${score}/${questionsList.length}`;
 
-  // Hide Next and Submit buttons
   nextBtn.style.display = "none";
   submitBtn.style.display = "none";
 
-  // Show Restart button inside footer
   let restartBtn = document.getElementById("restartBtn");
   if (!restartBtn) {
     restartBtn = document.createElement("button");
@@ -197,9 +241,11 @@ function showResult() {
   saveQuizHistory();
 }
 
-/* ================= RESTART (RESULT ONLY) ================= */
+/* ================= RESTART ================= */
 function restartQuiz() {
   clearInterval(timer);
+  sessionStorage.clear();
+
   currentQuestionIndex = 0;
   score = 0;
 
@@ -211,40 +257,23 @@ function restartQuiz() {
 
 /* ================= SAVE HISTORY ================= */
 function saveQuizHistory() {
-  const difficulty = localStorage.getItem("quizDifficulty");
-  const now = new Date();
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user) return;
 
-  const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  const difficulty = localStorage.getItem("quizDifficulty");
+  const historyKey = `quizHistory_${user.email}`;
+
+  const history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
   history.push({
-    difficulty,
-    score,
-    total: questionsList.length,
-    date: now.toLocaleDateString(),
-    time: now.toLocaleTimeString()
+    difficulty: difficulty,
+    score: `${score}/${questionsList.length}`,
+    datetime: new Date().toISOString()
   });
 
-  localStorage.setItem("quizHistory", JSON.stringify(history));
+  localStorage.setItem(historyKey, JSON.stringify(history));
   localStorage.removeItem("quizDifficulty");
 }
 
-/* ================= TAB SWITCH WARNING ================= */
-let tabSwitchCount = 0;
-const maxWarnings = 3;
-let quizSubmitted = false;
-
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden && !quizSubmitted) {
-    tabSwitchCount++;
-
-    if (tabSwitchCount <= maxWarnings) {
-      alert(`⚠ Warning!\nTab switch ${tabSwitchCount}/${maxWarnings}`);
-    } else {
-      quizSubmitted = true;
-      alert("⚠ Too many tab switches! Quiz submitted.");
-      showResult();
-    }
-  }
-});
-
-/* ================= START QUIZ ================= */
+/* ================= START ================= */
 window.onload = initQuiz;

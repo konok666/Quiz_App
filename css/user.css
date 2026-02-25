@@ -371,6 +371,52 @@ body {
   font-weight: 500;
 }
 
+/* ================= FINAL MOBILE HISTORY FIX ================= */
+
+@media (max-width: 768px) {
+
+  /* Make only table scrollable */
+  .table-wrap,
+  .history-table-wrapper {
+    height: 420px !important;
+    max-height: none !important;
+    overflow: auto !important;
+    position: relative;
+  }
+
+  /* Force horizontal scroll */
+  .history-table {
+    min-width: 750px !important;
+    border-collapse: separate !important;
+    border-spacing: 0;
+  }
+
+  /* Sticky Header */
+  .history-table thead th {
+    position: sticky;
+    top: 0;
+    background: #2563eb;
+    z-index: 5;
+  }
+
+  /* Sticky First Column */
+  .history-table th:first-child,
+  .history-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: #ffffff;
+    z-index: 4;
+    font-weight: 600;
+  }
+
+  /* Header + first column overlap fix */
+  .history-table thead th:first-child {
+    background: #2563eb;
+    z-index: 6;
+  }
+
+}
+
 /* ================= QUIZ MODAL CONTENT ================= */
 .modal-content {
   background: #ffffff;

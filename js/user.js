@@ -139,96 +139,93 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   /* ========= HISTORY ========= */
-  let lastDeleted = null;
+let lastDeleted = null;
+const historyKey = `quizHistory_${user.email}`;
 
-  function loadHistory() {
-    historyTableBody.innerHTML = "";
+function loadHistory() {
+  historyTableBody.innerHTML = "";
 
-    let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
 
-    if (difficultyFilter.value !== "all") history = history.filter(h => h.difficulty === difficultyFilter.value);
-    if (dateFilterInput.value) history = history.filter(h => h.datetime && h.datetime.slice(0,10) === dateFilterInput.value);
+  if (difficultyFilter.value !== "all")
+    history = history.filter(h => h.difficulty === difficultyFilter.value);
 
-    if (!history.length) {
-      historyTableBody.innerHTML = `<tr><td colspan="5" class="empty">No quiz attempts found</td></tr>`;
-      return;
-    }
+  if (dateFilterInput.value)
+    history = history.filter(
+      h => h.datetime && h.datetime.slice(0, 10) === dateFilterInput.value
+    );
 
-    history.forEach((h, i) => {
-      let dateText = "-";
-      let timeText = "-";
-
-      if (h.datetime) {
-        const dt = new Date(h.datetime);
-        dateText = dt.toLocaleDateString();
-        timeText = dt.toLocaleTimeString();
-      }
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td class="diff ${h.difficulty}">${h.difficulty}</td>
-        <td>${h.score}</td>
-        <td>${dateText}</td>
-        <td>${timeText}</td>
-        <td><button class="delete-btn" data-index="${i}">Delete</button></td>
-      `;
-      historyTableBody.appendChild(row);
-    });
-
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = () => deleteHistoryItem(+btn.dataset.index);
-    });
+  if (!history.length) {
+    historyTableBody.innerHTML =
+      `<tr><td colspan="5" class="empty">No quiz attempts found</td></tr>`;
+    return;
   }
 
-  function deleteHistoryItem(index) {
-    let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-    lastDeleted = history.splice(index, 1)[0];
-    localStorage.setItem("quizHistory", JSON.stringify(history));
-    undoBtn.disabled = false;
-    loadHistory();
-    loadStats();
-  }
+  history.forEach((h, i) => {
+    const dt = new Date(h.datetime);
 
-  undoBtn.onclick = () => {
-    if (!lastDeleted) return;
-    let history = JSON.parse(localStorage.getItem("quizHistory")) || [];
-    history.unshift(lastDeleted);
-    localStorage.setItem("quizHistory", JSON.stringify(history));
-    lastDeleted = null;
-    undoBtn.disabled = true;
-    loadHistory();
-    loadStats();
-  };
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="diff ${h.difficulty}">${h.difficulty}</td>
+      <td>${h.score}</td>
+      <td>${dt.toLocaleDateString()}</td>
+      <td>${dt.toLocaleTimeString()}</td>
+      <td><button class="delete-btn" data-index="${i}">Delete</button></td>
+    `;
 
-  difficultyFilter.onchange = loadHistory;
-  dateFilterInput.onchange = loadHistory;
+    historyTableBody.appendChild(row);
+  });
 
-  /* ========= STATS ========= */
-  function loadStats() {
-    const history = JSON.parse(localStorage.getItem("quizHistory")) || [];
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.onclick = () => deleteHistoryItem(+btn.dataset.index);
+  });
+}
 
-    ["easy", "medium", "hard"].forEach(level => {
-      const data = history.filter(h => h.difficulty === level);
+function deleteHistoryItem(index) {
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+  lastDeleted = history.splice(index, 1)[0];
+  localStorage.setItem(historyKey, JSON.stringify(history));
+  undoBtn.disabled = false;
+  loadHistory();
+  loadStats();
+}
 
-      const scores = data.map(h => {
-        if (typeof h.score === "number") return h.score;
-        if (typeof h.score === "string" && h.score.includes("/")) {
-          return Number(h.score.split("/")[0]);
-        }
-        return 0;
-      });
+undoBtn.onclick = () => {
+  if (!lastDeleted) return;
 
-      const attempts = scores.length;
-      const best = attempts ? Math.max(...scores) : 0;
-      const avg = attempts
-        ? (scores.reduce((a, b) => a + b, 0) / attempts).toFixed(2)
-        : 0;
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+  history.unshift(lastDeleted);
+  localStorage.setItem(historyKey, JSON.stringify(history));
 
-      document.getElementById(`${level}Attempts`).textContent = attempts;
-      document.getElementById(`${level}Best`).textContent = best;
-      document.getElementById(`${level}Avg`).textContent = avg;
-    });
-  }
+  lastDeleted = null;
+  undoBtn.disabled = true;
+
+  loadHistory();
+  loadStats();
+};
+
+/* ========= STATS ========= */
+function loadStats() {
+  const history = JSON.parse(localStorage.getItem(historyKey)) || [];
+
+  ["easy", "medium", "hard"].forEach(level => {
+    const data = history.filter(h => h.difficulty === level);
+
+    const scores = data.map(h =>
+      Number(h.score.split("/")[0])
+    );
+
+    const attempts = scores.length;
+    const best = attempts ? Math.max(...scores) : 0;
+    const avg = attempts
+      ? (scores.reduce((a, b) => a + b, 0) / attempts).toFixed(2)
+      : 0;
+
+    document.getElementById(`${level}Attempts`).textContent = attempts;
+    document.getElementById(`${level}Best`).textContent = best;
+    document.getElementById(`${level}Avg`).textContent = avg;
+  });
+}
 
   /* ========= INIT ========= */
   loadHistory();
