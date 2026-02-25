@@ -14,31 +14,6 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
   />
 
-  <style>
-    .password-wrapper {
-      position: relative;
-      margin-bottom: 10px;
-    }
-
-    .password-wrapper input {
-      width: 100%;
-      padding-right: 45px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 18px;
-      color: #555;
-    }
-
-    .toggle-password:hover {
-      color: #000;
-    }
-  </style>
 </head>
 
 <body>
@@ -106,33 +81,6 @@
   <!-- JS files -->
   <script src="../js/storage.js"></script>
   <script src="../js/register.js"></script>
-
-  <!-- PASSWORD LOGIC -->
-  <!-- <script>
-    function togglePassword(inputId, icon) {
-      const input = document.getElementById(inputId);
-
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.replace("fa-eye", "fa-eye-slash");
-      } else {
-        input.type = "password";
-        icon.classList.replace("fa-eye-slash", "fa-eye");
-      }
-    }
-
-    // Confirm password validation
-    document.getElementById("registerForm").addEventListener("submit", function (e) {
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-      const errorEl = document.getElementById("error");
-
-      if (password !== confirmPassword) {
-        e.preventDefault();
-        errorEl.innerText = "❌ Passwords do not match";
-      }
-    });
-  </script> -->
 
 </body>
 </html>

@@ -7,13 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!form) return;
 
   // Password toggle
-  window.toggleAdminPassword = () => {
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
-    } else {
-      passwordInput.type = "password";
-      toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+  window.togglePassword = (inputId, icon) => {
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } 
+    else {
+      input.type = "password";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
     }
   };
 
