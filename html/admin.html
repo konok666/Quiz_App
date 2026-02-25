@@ -73,24 +73,42 @@
 
   <!-- ===== USERS ===== -->
   <section id="users" class="section hidden">
-    <div class="section-header">
-      <h2 class="page-title">👥 Users</h2>
-      <p>Total Users: <span id="userCount">0</span></p>
+    <h2 class="page-title">👥 Users</h2>
+
+  <div class="stats-cards">
+
+    <!-- TOTAL USERS CARD -->
+    <div class="stat-card">
+      <div class="stat-info">
+        <p class="stat-label">Total Users</p>
+        <h3 id="userCount">0</h3>
+      </div>
     </div>
-    <ul id="usersList" class="users-list"></ul>
-  </section>
+
+  </div>
+
+  <ul id="usersList" class="users-list"></ul>
+
+</section>
 
   <!-- ===== QUESTIONS ===== -->
   <section id="questions" class="section hidden">
     <h2 class="page-title">❓ Questions</h2>
 
     <div class="filter-bar">
+
+      <!-- SEARCH -->
       <div class="search-box">
         <input id="searchInput" placeholder="Search questions..." />
-        <button id="clearSearch" class="clear-btn hidden">✕</button>
-        <ul id="searchSuggestions" class="suggestions hidden"></ul>
+
+        <!-- CLEAR BUTTON -->
+        <button id="clearSearch" class="clear-btn">✕</button>
+
+        <!-- SUGGESTIONS -->
+        <ul id="searchSuggestions" class="suggestions"></ul>
       </div>
 
+      <!-- DIFFICULTY FILTER -->
       <select id="difficultyFilter">
         <option value="">All</option>
         <option value="easy">Easy</option>
@@ -98,18 +116,23 @@
         <option value="hard">Hard</option>
       </select>
 
+      <!-- CLEAR ALL QUESTIONS -->
       <button id="clearQuestionsBtn" class="btn-danger">
         🗑 Clear All
       </button>
+
     </div>
 
+    <!-- STATS -->
     <div class="stats">
       <p>Easy <span id="easyCount">0</span></p>
       <p>Medium <span id="mediumCount">0</span></p>
       <p>Hard <span id="hardCount">0</span></p>
     </div>
 
+    <!-- QUESTIONS LIST -->
     <ul id="questionsList" class="questions-list"></ul>
+
   </section>
 
   <!-- ===== ADD QUESTION ===== -->

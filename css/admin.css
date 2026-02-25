@@ -194,41 +194,120 @@ body.sidebar-open .main-content {
   color: #2563eb;
 }
 
-/* ================= LISTS ================= */
-.users-list,
-.questions-list {
+/* ================= USERS LIST ================= */
+
+.users-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding: 0;
+}
+
+/* ================= USER CARD ================= */
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* ================= AVATAR ================= */
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* ================= INFO ================= */
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.user-email {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ================= BADGE ================= */
+
+.user-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* ================= EMPTY STATE ================= */
+
+.user-card.empty {
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.empty-icon {
+  font-size: 30px;
+  margin-bottom: 8px;
 }
 
 /* ================= FILTER BAR ================= */
+
 .filter-bar {
   display: flex;
-  gap: 12px;
   align-items: center;
-  flex-wrap: wrap;
+  gap: 12px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 
-.filter-bar input,
-.filter-bar select {
-  transition: all 0.3s ease;
-}
-
-.filter-bar input:focus,
-.filter-bar select:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
-}
-
-/* ================= SEARCH BOX ================= */
+/* Make search bigger */
 .search-box {
   position: relative;
   flex: 2;
-  max-width: 420px;
+  min-width: 250px;
 }
+
+/* Make filter smaller */
+.filter-bar select {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+/* ================= SEARCH BOX ================= */
 
 .search-box input {
   width: 100%;
@@ -238,14 +317,18 @@ body.sidebar-open .main-content {
   transition: all 0.3s ease;
 }
 
-.search-box input:focus {
+.search-box input:focus,
+.filter-bar select:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
 }
+
+/* ================= CLEAR BUTTON ================= */
 
 .clear-btn {
   position: absolute;
-  right: 10px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
@@ -253,12 +336,17 @@ body.sidebar-open .main-content {
   font-size: 18px;
   cursor: pointer;
   color: #6b7280;
+  display: none; /* hidden by default */
+  padding: 0;
+  line-height: 1;
   transition: color 0.3s ease;
 }
 
 .clear-btn:hover {
   color: #111827;
 }
+
+/* ================= SUGGESTIONS ================= */
 
 .suggestions {
   position: absolute;
@@ -271,14 +359,19 @@ body.sidebar-open .main-content {
   list-style: none;
   overflow: hidden;
   z-index: 3000;
+
+  /* Hidden by default */
   opacity: 0;
   transform: translateY(-6px);
+  pointer-events: none;
+
   transition: all 0.3s ease;
 }
 
 .suggestions.show {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .suggestions li {
@@ -289,6 +382,21 @@ body.sidebar-open .main-content {
 
 .suggestions li:hover {
   background: #f3f4f6;
+}
+
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media (max-width: 600px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box,
+  .filter-bar select {
+    width: 100%;
+    flex: unset;
+  }
 }
 
 /* ================= QUESTION CARDS ================= */
@@ -554,11 +662,6 @@ select:focus {
     grid-template-columns: 1fr;
   }
 }
-
-/* =====================================================
-   ADD / EDIT QUESTION PAGE – SAFE PROFESSIONAL STYLING
-   Scoped strictly to #addQuestion
-===================================================== */
 
 #addQuestion .question-form {
   max-width: 720px;

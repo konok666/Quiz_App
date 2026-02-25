@@ -45,6 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearQuestionsBtn = document.getElementById("clearQuestionsBtn");
 
   const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+  const suggestions = document.getElementById("searchSuggestions");
   const difficultyFilter = document.getElementById("difficultyFilter");
 
   const userCountEl = document.getElementById("userCount");
@@ -113,22 +115,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= USERS ================= */
   function loadUsers() {
-    const users = (getUsers() || []).filter(u => u.role === "user");
-    if (userCountEl) userCountEl.textContent = users.length;
+  const users = (getUsers() || []).filter(u => u.role === "user");
+  if (userCountEl) userCountEl.textContent = users.length;
 
-    if (!usersListEl) return;
+  if (!usersListEl) return;
 
-    usersListEl.innerHTML = users.length
-      ? users.map(u => `
+  usersListEl.innerHTML = users.length
+    ? users.map(u => {
+        const initials = u.name
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .toUpperCase();
+
+        return `
         <li class="user-card">
+          <div class="user-avatar">${initials}</div>
+
           <div class="user-info">
-            <strong>${u.name}</strong>
-            <small>${u.email}</small>
+            <div class="user-name">${u.name}</div>
+            <div class="user-email">${u.email}</div>
           </div>
+
+          <div class="user-badge">User</div>
         </li>
-      `).join("")
-      : `<li class="user-card empty">No users</li>`;
-  }
+      `;
+      }).join("")
+    : `
+      <li class="user-card empty">
+        <div class="empty-icon">👤</div>
+        <p>No users registered yet</p>
+      </li>
+    `;
+}
+
+  /*========== Show / Hide Clear Button ============*/
+  searchInput.addEventListener("input", function () {
+
+    if (this.value.trim() !== "") {
+      clearSearch.style.display = "block";
+    } else {
+      clearSearch.style.display = "none";
+      suggestions.classList.remove("show");
+    }
+
+  });
+
+  /* Clear All Text */
+  clearSearch.addEventListener("click", function () {
+    searchInput.value = "";
+    clearSearch.style.display = "none";
+    suggestions.classList.remove("show");
+    searchInput.focus();
+  });
 
   /* ================= QUESTIONS ================= */
   function getQuestionsWithIndex() {
